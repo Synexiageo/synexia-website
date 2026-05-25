@@ -678,7 +678,9 @@ async function submitHeroLead() {
   const ref = document.getElementById('hero-ref').value.trim();
   const msg = document.getElementById('hero-msg');
   const btn = document.getElementById('hero-submit-btn');
-  if (!name || !phone) { setMsg(msg,'სახელი და ტელეფონი სავალდებულოა',false); return; }
+  const digits = phone.replace(/\D/g,'');
+  if (!name) { setMsg(msg,'სახელი სავალდებულოა',false); return; }
+  if (digits.length !== 9) { setMsg(msg,'ტელეფონი უნდა შეიცავდეს 9 ციფრს',false); return; }
   btn.disabled = true; btn.textContent = 'იგზავნება...';
   setMsg(msg,'✓ თქვენ წარმატებით დარეგისტრირდით! დაელოდეთ ზარს ჩვენგან!',true);
   ['hero-name','hero-phone','hero-ref'].forEach(id => document.getElementById(id).value='');
@@ -698,7 +700,9 @@ async function submitContactLead() {
   const note = document.getElementById('c-note').value.trim();
   const msg = document.getElementById('c-msg');
   const btn = document.getElementById('c-submit-btn');
-  if (!name || !phone) { setMsg(msg,'სახელი და ტელეფონი სავალდებულოა',false); return; }
+  const cdigits = phone.replace(/\D/g,'');
+  if (!name) { setMsg(msg,'სახელი სავალდებულოა',false); return; }
+  if (cdigits.length !== 9) { setMsg(msg,'ტელეფონი უნდა შეიცავდეს 9 ციფრს',false); return; }
   btn.disabled = true; btn.textContent = 'იგზავნება...';
   setMsg(msg,'✓ თქვენ წარმატებით დარეგისტრირდით! დაელოდეთ ზარს ჩვენგან!',true);
   ['c-name','c-phone','c-note'].forEach(id => document.getElementById(id).value='');
