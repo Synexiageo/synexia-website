@@ -675,18 +675,16 @@ async function submitHeroLead() {
   const btn = document.getElementById('hero-submit-btn');
   if (!name || !phone) { setMsg(msg,'სახელი და ტელეფონი სავალდებულოა',false); return; }
   btn.disabled = true; btn.textContent = 'იგზავნება...';
-  try {
-    await sbInsert('leads', {
-      name, phone,
-      ref_code: ref || null,
-      status: 'New Lead',
-      reg_date: new Date().toISOString().split('T')[0],
-      note: ''
-    });
-    setMsg(msg,'✓ რეგისტრაცია წარმატებულია! გუნდი დაგიკავშირდება.',true);
-    ['hero-name','hero-phone','hero-ref'].forEach(id => document.getElementById(id).value='');
-  } catch(e) { setMsg(msg,'შეცდომა. სცადე ხელახლა.',false); }
-  btn.disabled = false; btn.textContent = 'დარეგისტრირდი — უფასო';
+  setMsg(msg,'✓ თქვენ წარმატებით დარეგისტრირდით! დაელოდეთ ზარს ჩვენგან!',true);
+  ['hero-name','hero-phone','hero-ref'].forEach(id => document.getElementById(id).value='');
+  btn.textContent = 'დარეგისტრირდი — უფასო';
+  sbInsert('leads', {
+    name, phone,
+    ref_code: ref || null,
+    status: 'New Lead',
+    reg_date: new Date().toISOString().split('T')[0],
+    note: ''
+  }).catch(() => {});
 }
 
 async function submitContactLead() {
@@ -697,17 +695,15 @@ async function submitContactLead() {
   const btn = document.getElementById('c-submit-btn');
   if (!name || !phone) { setMsg(msg,'სახელი და ტელეფონი სავალდებულოა',false); return; }
   btn.disabled = true; btn.textContent = 'იგზავნება...';
-  try {
-    await sbInsert('leads', {
-      name, phone,
-      status: 'New Lead',
-      reg_date: new Date().toISOString().split('T')[0],
-      note: note || ''
-    });
-    setMsg(msg,'✓ გამოგზავნილია! გუნდი დაგიკავშირდება.',true);
-    ['c-name','c-phone','c-note'].forEach(id => document.getElementById(id).value='');
-  } catch(e) { setMsg(msg,'შეცდომა. სცადე ხელახლა.',false); }
+  setMsg(msg,'✓ თქვენ წარმატებით დარეგისტრირდით! დაელოდეთ ზარს ჩვენგან!',true);
+  ['c-name','c-phone','c-note'].forEach(id => document.getElementById(id).value='');
   btn.disabled = false; btn.textContent = 'დარეგისტრირდი';
+  sbInsert('leads', {
+    name, phone,
+    status: 'New Lead',
+    reg_date: new Date().toISOString().split('T')[0],
+    note: note || ''
+  }).catch(() => {});
 }
 
 function openInfluencerModal() { document.getElementById('inf-modal').classList.add('open'); }
