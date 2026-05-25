@@ -648,7 +648,11 @@ function showComp(tab, btn) {
   btn.classList.add('active');
 }
 
+function genId(prefix) {
+  return prefix + '-' + Date.now() + '-' + Math.random().toString(36).slice(2,7);
+}
 async function sbInsert(table, data) {
+  if (!data.id) data.id = genId('WEB');
   const res = await fetch(`${SB_URL}/rest/v1/${table}`, {
     method: 'POST',
     headers: {
