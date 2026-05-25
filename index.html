@@ -682,7 +682,7 @@ async function submitHeroLead() {
   btn.disabled = true; btn.textContent = 'იგზავნება...';
   setMsg(msg,'✓ თქვენ წარმატებით დარეგისტრირდით! დაელოდეთ ზარს ჩვენგან!',true);
   ['hero-name','hero-phone','hero-ref'].forEach(id => document.getElementById(id).value='');
-  btn.textContent = 'დარეგისტრირდი — უფასო';
+  btn.disabled = false; btn.textContent = 'დარეგისტრირდი — უფასო';
   sbInsert('leads', {
     name, phone,
     ref_code: ref || null,
