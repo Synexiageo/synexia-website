@@ -697,21 +697,12 @@ function setMsg(el, text, ok) {
   el.textContent = text;
 }
 
-const HS_PORTAL_ID = '148692599';
-const HS_FORM_GUID = '48a15a97-1ef6-45c5-a8b2-6c9d947a1a8b';
-function getHsCookie() {
-  const m = document.cookie.match(/(?:^|; )hubspotutk=([^;]+)/);
-  return m ? m[1] : null;
-}
-async function submitToHubSpot(fields, pageName) {
+async function submitToHubSpot(firstname, phone) {
   try {
-    const hutk = getHsCookie();
-    const context = { pageUri: window.location.href, pageName };
-    if (hutk) context.hutk = hutk;
-    await fetch(`https://api.hsforms.com/submissions/v3/integration/submit/${HS_PORTAL_ID}/${HS_FORM_GUID}`, {
+    await fetch('/.netlify/functions/hubspot-lead', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ fields, context })
+      body: JSON.stringify({ firstname, phone })
     });
   } catch(e) {}
 }
@@ -727,11 +718,7 @@ async function submitHeroLead() {
   if (digits.length !== 9) { setMsg(msg,'ტელეფონი უნდა შეიცავდეს 9 ციფრს',false); return; }
   btn.disabled = true; btn.textContent = 'იგზავნება...';
   setMsg(msg,'✓ თქვენ წარმატებით დარეგისტრირდით! დაელოდეთ ზარს ჩვენგან!',true);
-  submitToHubSpot([
-    {name:'firstname', value:name},
-    {name:'mobilephone', value:'+995'+digits},
-    {name:'referral_code', value:ref||''}
-  ], 'Synexia - Hero Form');
+  submitToHubSpot(name, '+995'+digits);
   ['hero-name','hero-phone','hero-ref'].forEach(id => document.getElementById(id).value='');
   btn.disabled = false; btn.textContent = 'დარეგისტრირდი — უფასო';
   sbInsert('leads', {
@@ -754,10 +741,7 @@ async function submitContactLead() {
   if (cdigits.length !== 9) { setMsg(msg,'ტელეფონი უნდა შეიცავდეს 9 ციფრს',false); return; }
   btn.disabled = true; btn.textContent = 'იგზავნება...';
   setMsg(msg,'✓ თქვენ წარმატებით დარეგისტრირდით! დაელოდეთ ზარს ჩვენგან!',true);
-  submitToHubSpot([
-    {name:'firstname', value:name},
-    {name:'mobilephone', value:'+995'+cdigits}
-  ], 'Synexia - Contact Form');
+  submitToHubSpot(name, '+995'+cdigits);
   ['c-name','c-phone','c-note'].forEach(id => document.getElementById(id).value='');
   btn.disabled = false; btn.textContent = 'დარეგისტრირდი';
   sbInsert('leads', {
