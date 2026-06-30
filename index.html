@@ -697,6 +697,18 @@ function setMsg(el, text, ok) {
   el.textContent = text;
 }
 
+const HS_PORTAL_ID = '148692599';
+const HS_FORM_GUID = '48a15a97-1ef6-45c5-a8b2-6c9d947a1a8b';
+async function submitToHubSpot(fields, pageName) {
+  try {
+    await fetch(`https://api.hsforms.com/submissions/v3/integration/submit/${HS_PORTAL_ID}/${HS_FORM_GUID}`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ fields, context: { pageUri: window.location.href, pageName } })
+    });
+  } catch(e) {}
+}
+
 async function submitHeroLead() {
   const name = document.getElementById('hero-name').value.trim();
   const phone = document.getElementById('hero-phone').value.trim();
@@ -708,7 +720,11 @@ async function submitHeroLead() {
   if (digits.length !== 9) { setMsg(msg,'ტელეფონი უნდა შეიცავდეს 9 ციფრს',false); return; }
   btn.disabled = true; btn.textContent = 'იგზავნება...';
   setMsg(msg,'✓ თქვენ წარმატებით დარეგისტრირდით! დაელოდეთ ზარს ჩვენგან!',true);
-  document.getElementById('heroForm').dispatchEvent(new Event('submit', {bubbles:true, cancelable:true}));
+  submitToHubSpot([
+    {name:'firstname', value:name},
+    {name:'mobilephone', value:'+995'+digits},
+    {name:'referral_code', value:ref||''}
+  ], 'Synexia - Hero Form');
   ['hero-name','hero-phone','hero-ref'].forEach(id => document.getElementById(id).value='');
   btn.disabled = false; btn.textContent = 'დარეგისტრირდი — უფასო';
   sbInsert('leads', {
@@ -731,7 +747,10 @@ async function submitContactLead() {
   if (cdigits.length !== 9) { setMsg(msg,'ტელეფონი უნდა შეიცავდეს 9 ციფრს',false); return; }
   btn.disabled = true; btn.textContent = 'იგზავნება...';
   setMsg(msg,'✓ თქვენ წარმატებით დარეგისტრირდით! დაელოდეთ ზარს ჩვენგან!',true);
-  document.getElementById('contactForm').dispatchEvent(new Event('submit', {bubbles:true, cancelable:true}));
+  submitToHubSpot([
+    {name:'firstname', value:name},
+    {name:'mobilephone', value:'+995'+cdigits}
+  ], 'Synexia - Contact Form');
   ['c-name','c-phone','c-note'].forEach(id => document.getElementById(id).value='');
   btn.disabled = false; btn.textContent = 'დარეგისტრირდი';
   sbInsert('leads', {
