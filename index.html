@@ -384,20 +384,20 @@ footer img { height: 28px; }
       <span class="hero-powered-microagi">MicroAGI GmbH 🇩🇪</span>
     </div>
   </div>
-  <div class="hero-form">
+  <form class="hero-form" id="heroForm" onsubmit="return false">
     <div class="hero-form-title">დარეგისტრირდი ახლავე</div>
     <div class="hero-form-sub">Synexia-ს გუნდი დაგიკავშირდება 24 საათში</div>
-    <input type="text" id="hero-name" placeholder="სახელი და გვარი">
-    <input type="tel" id="hero-phone" placeholder="ტელეფონი (+995)">
+    <input type="text" id="hero-name" name="firstname" placeholder="სახელი და გვარი">
+    <input type="tel" id="hero-phone" name="phone" placeholder="ტელეფონი (+995)">
     <div class="referral-wrap">
       <span class="referral-icon">🔗</span>
-      <input type="text" id="hero-ref" placeholder="რეფერალის კოდი">
+      <input type="text" id="hero-ref" name="referral_code" placeholder="რეფერალის კოდი">
       <span class="referral-optional">არასავალდებულო</span>
     </div>
     <button type="button" id="hero-submit-btn" onclick="submitHeroLead()">დარეგისტრირდი — უფასო</button>
     <div id="hero-msg" style="display:none;font-size:12px;text-align:center;margin-top:4px;"></div>
     <div class="hero-form-note">რეგისტრაცია უფასოა</div>
-  </div>
+  </form>
 </section>
 
 <div class="stats">
@@ -638,13 +638,13 @@ footer img { height: 28px; }
         <div class="cinfo"><div class="cinfo-icon">📍</div><div>116 აკაკი წერეთლის გამზ., თბილისი 0119</div></div>
         <div class="cinfo"><div class="cinfo-icon">🌐</div><div><a href="https://microagi.ai" target="_blank">microagi.ai</a></div></div>
       </div>
-      <div class="cform">
-        <div class="cform-field"><label>სახელი და გვარი</label><input type="text" id="c-name" placeholder="გიორგი მაგალითაძე"></div>
-        <div class="cform-field"><label>ტელეფონი</label><input type="tel" id="c-phone" placeholder="+995 5XX XXX XXX"></div>
-        <div class="cform-field"><label>შეტყობინება (არასავალდებულო)</label><textarea id="c-note" placeholder="დამატებითი ინფორმაცია..."></textarea></div>
+      <form class="cform" id="contactForm" onsubmit="return false">
+        <div class="cform-field"><label>სახელი და გვარი</label><input type="text" id="c-name" name="firstname" placeholder="გიორგი მაგალითაძე"></div>
+        <div class="cform-field"><label>ტელეფონი</label><input type="tel" id="c-phone" name="phone" placeholder="+995 5XX XXX XXX"></div>
+        <div class="cform-field"><label>შეტყობინება (არასავალდებულო)</label><textarea id="c-note" name="message" placeholder="დამატებითი ინფორმაცია..."></textarea></div>
         <div id="c-msg" style="display:none;font-size:13px;margin-bottom:8px;text-align:center;"></div>
         <button type="button" id="c-submit-btn" onclick="submitContactLead()">დარეგისტრირდი</button>
-      </div>
+      </form>
     </div>
   </div>
 </section>
@@ -708,6 +708,7 @@ async function submitHeroLead() {
   if (digits.length !== 9) { setMsg(msg,'ტელეფონი უნდა შეიცავდეს 9 ციფრს',false); return; }
   btn.disabled = true; btn.textContent = 'იგზავნება...';
   setMsg(msg,'✓ თქვენ წარმატებით დარეგისტრირდით! დაელოდეთ ზარს ჩვენგან!',true);
+  document.getElementById('heroForm').dispatchEvent(new Event('submit', {bubbles:true, cancelable:true}));
   ['hero-name','hero-phone','hero-ref'].forEach(id => document.getElementById(id).value='');
   btn.disabled = false; btn.textContent = 'დარეგისტრირდი — უფასო';
   sbInsert('leads', {
@@ -730,6 +731,7 @@ async function submitContactLead() {
   if (cdigits.length !== 9) { setMsg(msg,'ტელეფონი უნდა შეიცავდეს 9 ციფრს',false); return; }
   btn.disabled = true; btn.textContent = 'იგზავნება...';
   setMsg(msg,'✓ თქვენ წარმატებით დარეგისტრირდით! დაელოდეთ ზარს ჩვენგან!',true);
+  document.getElementById('contactForm').dispatchEvent(new Event('submit', {bubbles:true, cancelable:true}));
   ['c-name','c-phone','c-note'].forEach(id => document.getElementById(id).value='');
   btn.disabled = false; btn.textContent = 'დარეგისტრირდი';
   sbInsert('leads', {
@@ -795,5 +797,8 @@ async function submitReview() {
   } catch(e) { setMsg(msg,'შეცდომა. სცადე ხელახლა.',false); btn.disabled=false; btn.textContent='გამოქვეყნება'; }
 }
 </script>
+<!-- Start of HubSpot Embed Code -->
+<script type="text/javascript" id="hs-script-loader" async defer src="//js-eu1.hs-scripts.com/148692599.js"></script>
+<!-- End of HubSpot Embed Code -->
 </body>
 </html>
