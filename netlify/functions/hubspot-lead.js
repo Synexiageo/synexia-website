@@ -1,23 +1,33 @@
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "https://synexia.ge",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type"
+};
+
 exports.handler = async (event) => {
+  if (event.httpMethod === "OPTIONS") {
+    return { statusCode: 204, headers: CORS_HEADERS, body: "" };
+  }
+
   if (event.httpMethod !== "POST") {
-    return { statusCode: 405, body: "Method Not Allowed" };
+    return { statusCode: 405, headers: CORS_HEADERS, body: "Method Not Allowed" };
   }
 
   const token = process.env.HUBSPOT_TOKEN;
   if (!token) {
-    return { statusCode: 500, body: JSON.stringify({ error: "Missing HUBSPOT_TOKEN" }) };
+    return { statusCode: 500, headers: CORS_HEADERS, body: JSON.stringify({ error: "Missing HUBSPOT_TOKEN" }) };
   }
 
   let data;
   try {
     data = JSON.parse(event.body || "{}");
   } catch (e) {
-    return { statusCode: 400, body: JSON.stringify({ error: "Invalid JSON" }) };
+    return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: "Invalid JSON" }) };
   }
 
   const { firstname, phone } = data;
   if (!firstname || !phone) {
-    return { statusCode: 400, body: JSON.stringify({ error: "firstname and phone are required" }) };
+    return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: "firstname and phone are required" }) };
   }
 
   // Only standard HubSpot contact properties are sent here — custom properties
@@ -38,11 +48,11 @@ exports.handler = async (event) => {
     const result = await res.json();
 
     if (!res.ok) {
-      return { statusCode: res.status, body: JSON.stringify(result) };
+      return { statusCode: res.status, headers: CORS_HEADERS, body: JSON.stringify(result) };
     }
 
-    return { statusCode: 200, body: JSON.stringify({ ok: true, id: result.id }) };
+    return { statusCode: 200, headers: CORS_HEADERS, body: JSON.stringify({ ok: true, id: result.id }) };
   } catch (e) {
-    return { statusCode: 500, body: JSON.stringify({ error: e.message }) };
+    return { statusCode: 500, headers: CORS_HEADERS, body: JSON.stringify({ error: e.message }) };
   }
 };
