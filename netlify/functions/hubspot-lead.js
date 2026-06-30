@@ -18,6 +18,14 @@ exports.handler = async (event) => {
     return { statusCode: 500, headers: CORS_HEADERS, body: JSON.stringify({ error: "Missing HUBSPOT_TOKEN" }) };
   }
 
+  if (event.queryStringParameters && event.queryStringParameters.debug === "1") {
+    return {
+      statusCode: 200,
+      headers: CORS_HEADERS,
+      body: JSON.stringify({ length: token.length, prefix: token.slice(0, 8), suffix: token.slice(-4) })
+    };
+  }
+
   let data;
   try {
     data = JSON.parse(event.body || "{}");
