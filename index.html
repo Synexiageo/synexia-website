@@ -396,19 +396,7 @@ footer img { height: 28px; }
       <option value="დასაქმებული">დასაქმებული</option>
       <option value="თვითდასაქმებული">თვითდასაქმებული</option>
     </select>
-    <select id="hero-city" name="city">
-      <option value="" disabled selected>რომელ ქალაქში ცხოვრობთ?</option>
-      <option value="Tbilisi">თბილისი</option>
-      <option value="Batumi">ბათუმი</option>
-      <option value="Kutaisi">ქუთაისი</option>
-      <option value="Rustavi">რუსთავი</option>
-      <option value="Gori">გორი</option>
-      <option value="Zugdidi">ზუგდიდი</option>
-      <option value="Poti">ფოთი</option>
-      <option value="Kobuleti">ქობულეთი</option>
-      <option value="Kakheti">კახეთი</option>
-      <option value="Telavi">თელავი</option>
-    </select>
+    <input type="text" id="hero-city" name="city" placeholder="რომელ ქალაქში ცხოვრობთ?">
     <input type="text" id="hero-phone-model" name="phone_model" placeholder="მობილურის ბრენდი და მოდელი (მაგ: iPhone 13)">
     <div class="referral-wrap">
       <span class="referral-icon">🔗</span>
@@ -671,21 +659,7 @@ footer img { height: 28px; }
             <option value="თვითდასაქმებული">თვითდასაქმებული</option>
           </select>
         </div>
-        <div class="cform-field"><label>ქალაქი</label>
-          <select id="c-city" name="city">
-            <option value="" disabled selected>აირჩიეთ ქალაქი</option>
-            <option value="Tbilisi">თბილისი</option>
-            <option value="Batumi">ბათუმი</option>
-            <option value="Kutaisi">ქუთაისი</option>
-            <option value="Rustavi">რუსთავი</option>
-            <option value="Gori">გორი</option>
-            <option value="Zugdidi">ზუგდიდი</option>
-            <option value="Poti">ფოთი</option>
-            <option value="Kobuleti">ქობულეთი</option>
-            <option value="Kakheti">კახეთი</option>
-            <option value="Telavi">თელავი</option>
-          </select>
-        </div>
+        <div class="cform-field"><label>ქალაქი</label><input type="text" id="c-city" name="city" placeholder="მაგ: თბილისი"></div>
         <div class="cform-field"><label>მობილურის ბრენდი და მოდელი</label><input type="text" id="c-phone-model" name="phone_model" placeholder="მაგ: iPhone 13 Pro"></div>
         <div id="c-msg" style="display:none;font-size:13px;margin-bottom:8px;text-align:center;"></div>
         <button type="button" id="c-submit-btn" onclick="submitContactLead()">დარეგისტრირდი</button>
