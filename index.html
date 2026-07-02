@@ -389,6 +389,27 @@ footer img { height: 28px; }
     <div class="hero-form-sub">Synexia-ს გუნდი დაგიკავშირდება 24 საათში</div>
     <input type="text" id="hero-name" name="firstname" placeholder="სახელი და გვარი">
     <input type="tel" id="hero-phone" name="phone" placeholder="ტელეფონი (+995)">
+    <input type="text" id="hero-sphere" name="sphere" placeholder="რა სფეროში მუშაობთ?">
+    <select id="hero-employment" name="employment">
+      <option value="" disabled selected>კომპანია / დასაქმება / თვითდასაქმება?</option>
+      <option value="კომპანია">კომპანია</option>
+      <option value="დასაქმებული">დასაქმებული</option>
+      <option value="თვითდასაქმებული">თვითდასაქმებული</option>
+    </select>
+    <select id="hero-city" name="city">
+      <option value="" disabled selected>რომელ ქალაქში ცხოვრობთ?</option>
+      <option value="Tbilisi">თბილისი</option>
+      <option value="Batumi">ბათუმი</option>
+      <option value="Kutaisi">ქუთაისი</option>
+      <option value="Rustavi">რუსთავი</option>
+      <option value="Gori">გორი</option>
+      <option value="Zugdidi">ზუგდიდი</option>
+      <option value="Poti">ფოთი</option>
+      <option value="Kobuleti">ქობულეთი</option>
+      <option value="Kakheti">კახეთი</option>
+      <option value="Telavi">თელავი</option>
+    </select>
+    <input type="text" id="hero-phone-model" name="phone_model" placeholder="მობილურის ბრენდი და მოდელი (მაგ: iPhone 13)">
     <div class="referral-wrap">
       <span class="referral-icon">🔗</span>
       <input type="text" id="hero-ref" name="referral_code" placeholder="რეფერალის კოდი">
@@ -641,7 +662,31 @@ footer img { height: 28px; }
       <form class="cform" id="contactForm" onsubmit="return false">
         <div class="cform-field"><label>სახელი და გვარი</label><input type="text" id="c-name" name="firstname" placeholder="გიორგი მაგალითაძე"></div>
         <div class="cform-field"><label>ტელეფონი</label><input type="tel" id="c-phone" name="phone" placeholder="+995 5XX XXX XXX"></div>
-        <div class="cform-field"><label>შეტყობინება (არასავალდებულო)</label><textarea id="c-note" name="message" placeholder="დამატებითი ინფორმაცია..."></textarea></div>
+        <div class="cform-field"><label>რა სფეროში მუშაობთ?</label><input type="text" id="c-sphere" name="sphere" placeholder="მაგ: IT, ვაჭრობა, განათლება..."></div>
+        <div class="cform-field"><label>კომპანია / დასაქმება?</label>
+          <select id="c-employment" name="employment">
+            <option value="" disabled selected>აირჩიეთ</option>
+            <option value="კომპანია">კომპანია</option>
+            <option value="დასაქმებული">დასაქმებული</option>
+            <option value="თვითდასაქმებული">თვითდასაქმებული</option>
+          </select>
+        </div>
+        <div class="cform-field"><label>ქალაქი</label>
+          <select id="c-city" name="city">
+            <option value="" disabled selected>აირჩიეთ ქალაქი</option>
+            <option value="Tbilisi">თბილისი</option>
+            <option value="Batumi">ბათუმი</option>
+            <option value="Kutaisi">ქუთაისი</option>
+            <option value="Rustavi">რუსთავი</option>
+            <option value="Gori">გორი</option>
+            <option value="Zugdidi">ზუგდიდი</option>
+            <option value="Poti">ფოთი</option>
+            <option value="Kobuleti">ქობულეთი</option>
+            <option value="Kakheti">კახეთი</option>
+            <option value="Telavi">თელავი</option>
+          </select>
+        </div>
+        <div class="cform-field"><label>მობილურის ბრენდი და მოდელი</label><input type="text" id="c-phone-model" name="phone_model" placeholder="მაგ: iPhone 13 Pro"></div>
         <div id="c-msg" style="display:none;font-size:13px;margin-bottom:8px;text-align:center;"></div>
         <button type="button" id="c-submit-btn" onclick="submitContactLead()">დარეგისტრირდი</button>
       </form>
@@ -697,12 +742,12 @@ function setMsg(el, text, ok) {
   el.textContent = text;
 }
 
-async function submitToHubSpot(firstname, phone) {
+async function submitToHubSpot(firstname, phone, extra) {
   try {
     await fetch('https://rad-bublanina-6786ba.netlify.app/.netlify/functions/hubspot-lead', {
       method: 'POST',
       headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({ firstname, phone })
+      body: JSON.stringify({ firstname, phone, ...extra })
     });
   } catch(e) {}
 }
@@ -711,6 +756,10 @@ async function submitHeroLead() {
   const name = document.getElementById('hero-name').value.trim();
   const phone = document.getElementById('hero-phone').value.trim();
   const ref = document.getElementById('hero-ref').value.trim();
+  const sphere = document.getElementById('hero-sphere').value.trim();
+  const employment = document.getElementById('hero-employment').value;
+  const city = document.getElementById('hero-city').value;
+  const phoneModel = document.getElementById('hero-phone-model').value.trim();
   const msg = document.getElementById('hero-msg');
   const btn = document.getElementById('hero-submit-btn');
   const digits = phone.replace(/\D/g,'');
@@ -718,8 +767,9 @@ async function submitHeroLead() {
   if (digits.length !== 9) { setMsg(msg,'ტელეფონი უნდა შეიცავდეს 9 ციფრს',false); return; }
   btn.disabled = true; btn.textContent = 'იგზავნება...';
   setMsg(msg,'✓ თქვენ წარმატებით დარეგისტრირდით! დაელოდეთ ზარს ჩვენგან!',true);
-  submitToHubSpot(name, '+995'+digits);
-  ['hero-name','hero-phone','hero-ref'].forEach(id => document.getElementById(id).value='');
+  submitToHubSpot(name, '+995'+digits, { city, job_function: sphere, dasakmebis_statusi: employment, phone_model: phoneModel });
+  ['hero-name','hero-phone','hero-ref','hero-sphere','hero-phone-model'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('hero-employment').value=''; document.getElementById('hero-city').value='';
   btn.disabled = false; btn.textContent = 'დარეგისტრირდი — უფასო';
   sbInsert('leads', {
     name, phone,
@@ -733,7 +783,10 @@ async function submitHeroLead() {
 async function submitContactLead() {
   const name = document.getElementById('c-name').value.trim();
   const phone = document.getElementById('c-phone').value.trim();
-  const note = document.getElementById('c-note').value.trim();
+  const sphere = document.getElementById('c-sphere').value.trim();
+  const employment = document.getElementById('c-employment').value;
+  const city = document.getElementById('c-city').value;
+  const phoneModel = document.getElementById('c-phone-model').value.trim();
   const msg = document.getElementById('c-msg');
   const btn = document.getElementById('c-submit-btn');
   const cdigits = phone.replace(/\D/g,'');
@@ -741,8 +794,9 @@ async function submitContactLead() {
   if (cdigits.length !== 9) { setMsg(msg,'ტელეფონი უნდა შეიცავდეს 9 ციფრს',false); return; }
   btn.disabled = true; btn.textContent = 'იგზავნება...';
   setMsg(msg,'✓ თქვენ წარმატებით დარეგისტრირდით! დაელოდეთ ზარს ჩვენგან!',true);
-  submitToHubSpot(name, '+995'+cdigits);
-  ['c-name','c-phone','c-note'].forEach(id => document.getElementById(id).value='');
+  submitToHubSpot(name, '+995'+cdigits, { city, job_function: sphere, dasakmebis_statusi: employment, phone_model: phoneModel });
+  ['c-name','c-phone','c-sphere','c-phone-model'].forEach(id => document.getElementById(id).value='');
+  document.getElementById('c-employment').value=''; document.getElementById('c-city').value='';
   btn.disabled = false; btn.textContent = 'დარეგისტრირდი';
   sbInsert('leads', {
     name, phone,

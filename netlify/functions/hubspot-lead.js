@@ -33,15 +33,16 @@ exports.handler = async (event) => {
     return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: "Invalid JSON" }) };
   }
 
-  const { firstname, phone } = data;
+  const { firstname, phone, city, job_function, dasakmebis_statusi, phone_model } = data;
   if (!firstname || !phone) {
     return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ error: "firstname and phone are required" }) };
   }
 
-  // Only standard HubSpot contact properties are sent here — custom properties
-  // (referral_code, message) must exist in HubSpot before being added, or the
-  // whole request fails (unlike the Forms API, which silently drops unknown fields).
   const properties = { firstname, phone };
+  if (city) properties.city = city;
+  if (job_function) properties.job_function = job_function;
+  if (dasakmebis_statusi) properties.dasakmebis_statusi = dasakmebis_statusi;
+  if (phone_model) properties.phone_model = phone_model;
 
   try {
     const res = await fetch("https://api.hubapi.com/crm/v3/objects/contacts", {
