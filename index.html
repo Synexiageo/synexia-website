@@ -745,12 +745,13 @@ async function submitHeroLead() {
   ['hero-name','hero-phone','hero-ref','hero-sphere','hero-phone-model'].forEach(id => document.getElementById(id).value='');
   document.getElementById('hero-employment').value=''; document.getElementById('hero-city').value='';
   btn.disabled = false; btn.textContent = 'დარეგისტრირდი — უფასო';
+  const heroNote = [sphere && `სფერო: ${sphere}`, employment && `დასაქმება: ${employment}`, city && `ქალაქი: ${city}`, phoneModel && `მობილური: ${phoneModel}`].filter(Boolean).join(' | ');
   sbInsert('leads', {
     name, phone,
     ref_code: ref || null,
     status: 'New Lead',
     reg_date: new Date().toISOString().split('T')[0],
-    note: ''
+    note: heroNote
   }).catch(() => {});
 }
 
@@ -772,11 +773,12 @@ async function submitContactLead() {
   ['c-name','c-phone','c-sphere','c-phone-model'].forEach(id => document.getElementById(id).value='');
   document.getElementById('c-employment').value=''; document.getElementById('c-city').value='';
   btn.disabled = false; btn.textContent = 'დარეგისტრირდი';
+  const contactNote = [sphere && `სფერო: ${sphere}`, employment && `დასაქმება: ${employment}`, city && `ქალაქი: ${city}`, phoneModel && `მობილური: ${phoneModel}`].filter(Boolean).join(' | ');
   sbInsert('leads', {
     name, phone,
     status: 'New Lead',
     reg_date: new Date().toISOString().split('T')[0],
-    note: note || ''
+    note: contactNote
   }).catch(() => {});
 }
 
