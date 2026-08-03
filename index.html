@@ -741,7 +741,6 @@ async function submitHeroLead() {
   if (digits.length !== 9) { setMsg(msg,'ტელეფონი უნდა შეიცავდეს 9 ციფრს',false); return; }
   btn.disabled = true; btn.textContent = 'იგზავნება...';
   setMsg(msg,'✓ თქვენ წარმატებით დარეგისტრირდით! დაელოდეთ ზარს ჩვენგან!',true);
-  submitToHubSpot(name, '+995'+digits, { city, job_function: sphere, dasakmebis_statusi: employment, phone_model: phoneModel });
   ['hero-name','hero-phone','hero-ref','hero-sphere','hero-phone-model'].forEach(id => document.getElementById(id).value='');
   document.getElementById('hero-employment').value=''; document.getElementById('hero-city').value='';
   btn.disabled = false; btn.textContent = 'დარეგისტრირდი — უფასო';
@@ -769,7 +768,6 @@ async function submitContactLead() {
   if (cdigits.length !== 9) { setMsg(msg,'ტელეფონი უნდა შეიცავდეს 9 ციფრს',false); return; }
   btn.disabled = true; btn.textContent = 'იგზავნება...';
   setMsg(msg,'✓ თქვენ წარმატებით დარეგისტრირდით! დაელოდეთ ზარს ჩვენგან!',true);
-  submitToHubSpot(name, '+995'+cdigits, { city, job_function: sphere, dasakmebis_statusi: employment, phone_model: phoneModel });
   ['c-name','c-phone','c-sphere','c-phone-model'].forEach(id => document.getElementById(id).value='');
   document.getElementById('c-employment').value=''; document.getElementById('c-city').value='';
   btn.disabled = false; btn.textContent = 'დარეგისტრირდი';
