@@ -203,7 +203,7 @@ nav {
   background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
 .hero-form select option { background: #0f172a; color: white; }
 .hero-form select:focus { border-color: var(--blue); }
-.hero-form textarea { resize: vertical; min-height: 80px; display: none; }
+.hero-form textarea { resize: vertical; min-height: 80px; }
 .hero-form textarea:focus { border-color: var(--blue); }
 .hero-form textarea::placeholder { color: rgba(255,255,255,0.3); }
 .hero-ms-wrap { position: relative; }
@@ -794,15 +794,12 @@ function heroSphereChange() {
   const checked = [...document.querySelectorAll('.hero-sphere-chk:checked')];
   const lbl = document.getElementById('heroSphereLabel');
   const btn = document.getElementById('heroSphereBtn');
-  const detail = document.getElementById('hero-sphere-detail');
   if (checked.length) {
     lbl.textContent = checked.map(c=>c.value).join(', ');
     btn.classList.add('has-val');
-    detail.style.display = 'block';
   } else {
     lbl.textContent = '— აირჩიეთ პროფესია / სფერო —';
     btn.classList.remove('has-val');
-    detail.style.display = 'none';
   }
 }
 document.addEventListener('click', function(e) {
