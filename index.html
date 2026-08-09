@@ -191,6 +191,44 @@ nav {
 }
 .hero-form button:hover { background: var(--blue-dark); }
 .hero-form-note { font-size: 11px; color: rgba(255,255,255,0.25); text-align: center; }
+.hero-form select, .hero-form textarea {
+  width: 100%; padding: 11px 14px;
+  border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;
+  font-size: 14px; background: rgba(255,255,255,0.07); color: white;
+  font-family: 'Noto Sans Georgian', sans-serif; outline: none;
+  transition: border-color 0.2s; box-sizing: border-box;
+}
+.hero-form select { appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff66' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+.hero-form select option { background: #0f172a; color: white; }
+.hero-form select:focus { border-color: var(--blue); }
+.hero-form textarea { resize: vertical; min-height: 80px; display: none; }
+.hero-form textarea:focus { border-color: var(--blue); }
+.hero-form textarea::placeholder { color: rgba(255,255,255,0.3); }
+.hero-ms-wrap { position: relative; }
+.hero-form .hero-ms-btn {
+  width: 100%; padding: 11px 14px; text-align: left;
+  border: 1px solid rgba(255,255,255,0.1); border-radius: 8px;
+  font-size: 14px; background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.3);
+  font-family: 'Noto Sans Georgian', sans-serif; outline: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: space-between; gap: 6px;
+  transition: border-color 0.2s; box-sizing: border-box; margin-top: 0; font-weight: 400;
+}
+.hero-form .hero-ms-btn.has-val { color: white; }
+.hero-form .hero-ms-btn:focus, .hero-form .hero-ms-btn.open { border-color: var(--blue); }
+.hero-form .hero-ms-btn::after { content: '▾'; font-size: 11px; flex-shrink: 0; color: rgba(255,255,255,0.4); }
+.hero-ms-drop {
+  display: none; position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: 100;
+  background: #0f172a; border: 1px solid rgba(37,99,235,0.4); border-radius: 8px;
+  padding: 6px; max-height: 200px; overflow-y: auto;
+}
+.hero-ms-drop.open { display: block; }
+.hero-ms-item { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 6px;
+  cursor: pointer; font-size: 13px; color: rgba(255,255,255,0.8);
+  font-family: 'Noto Sans Georgian', sans-serif; }
+.hero-ms-item:hover { background: rgba(255,255,255,0.07); }
+.hero-ms-item input[type=checkbox] { accent-color: var(--blue); width: 14px; height: 14px; cursor: pointer; flex-shrink: 0; }
 
 /* STATS */
 .stats { background: var(--blue); padding: 2.5rem 5%; display: flex; justify-content: center; gap: 5rem; flex-wrap: wrap; }
@@ -389,15 +427,33 @@ footer img { height: 28px; }
     <div class="hero-form-sub">Synexia-ს გუნდი დაგიკავშირდება 24 საათში</div>
     <input type="text" id="hero-name" name="firstname" placeholder="სახელი და გვარი">
     <input type="tel" id="hero-phone" name="phone" placeholder="ტელეფონი (+995)">
-    <input type="text" id="hero-sphere" name="sphere" placeholder="რა სფეროში მუშაობთ?">
+    <div class="hero-ms-wrap" id="heroSphereWrap">
+      <button type="button" class="hero-ms-btn" id="heroSphereBtn" onclick="heroToggleSphere(event)">
+        <span id="heroSphereLabel">— აირჩიეთ პროფესია / სფერო —</span>
+      </button>
+      <div class="hero-ms-drop" id="heroSphereDrop">
+        <label class="hero-ms-item"><input type="checkbox" class="hero-sphere-chk" value="ლოჯისტიკა" onchange="heroSphereChange()"><span>ლოჯისტიკა</span></label>
+        <label class="hero-ms-item"><input type="checkbox" class="hero-sphere-chk" value="საცალო ვაჭრობა" onchange="heroSphereChange()"><span>საცალო ვაჭრობა</span></label>
+        <label class="hero-ms-item"><input type="checkbox" class="hero-sphere-chk" value="სტუმარმასპინძლობა" onchange="heroSphereChange()"><span>სტუმარმასპინძლობა</span></label>
+        <label class="hero-ms-item"><input type="checkbox" class="hero-sphere-chk" value="სამრეწველო" onchange="heroSphereChange()"><span>სამრეწველო</span></label>
+        <label class="hero-ms-item"><input type="checkbox" class="hero-sphere-chk" value="წვრილი ელექტრობა" onchange="heroSphereChange()"><span>წვრილი ელექტრობა</span></label>
+        <label class="hero-ms-item"><input type="checkbox" class="hero-sphere-chk" value="მშენებლობა" onchange="heroSphereChange()"><span>მშენებლობა</span></label>
+        <label class="hero-ms-item"><input type="checkbox" class="hero-sphere-chk" value="სოფლის მეურნეობა" onchange="heroSphereChange()"><span>სოფლის მეურნეობა</span></label>
+        <label class="hero-ms-item"><input type="checkbox" class="hero-sphere-chk" value="სხვა" onchange="heroSphereChange()"><span>სხვა</span></label>
+      </div>
+    </div>
+    <textarea id="hero-sphere-detail" placeholder="დეტალურად აღწერეთ თქვენი სამუშაო (მაგ. საწყობში ვახდენ ამანათების დახარისხებას...)"></textarea>
     <select id="hero-employment" name="employment">
-      <option value="" disabled selected>კომპანია / დასაქმება / თვითდასაქმება?</option>
-      <option value="კომპანია">კომპანია</option>
+      <option value="" disabled selected>დასაქმების სტატუსი</option>
+      <option value="დამსაქმებელი">დამსაქმებელი (კომპანიის მფლობელი)</option>
       <option value="დასაქმებული">დასაქმებული</option>
-      <option value="თვითდასაქმებული">თვითდასაქმებული</option>
+      <option value="თვითდასაქმებული">თვითდასაქმებული / ფრილანსერი</option>
     </select>
-    <input type="text" id="hero-city" name="city" placeholder="რომელ ქალაქში ცხოვრობთ?">
-    <input type="text" id="hero-phone-model" name="phone_model" placeholder="მობილურის ბრენდი და მოდელი (მაგ: iPhone 13)">
+    <select id="hero-city" name="city">
+      <option value="" disabled selected>— აირჩიეთ ქალაქი —</option>
+      <option>თბილისი</option><option>ბათუმი</option><option>რუსთავი</option><option>ქუთაისი</option><option>გორი</option><option>ფოთი</option><option>ზუგდიდი</option><option>ხაშური</option><option>სამტრედია</option><option>მარნეული</option><option>ზესტაფონი</option><option>სიგნახი</option><option>თელავი</option><option>ქობულეთი</option><option>ახალციხე</option><option>ოზურგეთი</option><option>კასპი</option><option>ჩხატური</option><option>გარდაბანი</option><option>ბორჯომი</option><option>საგარეჯო</option><option>ყვარელი</option><option>ბოლნისი</option><option>ტყიბული</option><option>წყალტუბო</option><option>ახალქალაქი</option><option>მცხეთა</option><option>გურჯაანი</option><option>დუშეთი</option><option>ყარელი</option><option>ლანჩხუთი</option><option>ახმეტა</option><option>ლაგოდეხი</option><option>საჩხერე</option><option>სენაკი</option><option>თეთრიწყარო</option><option>სხვა</option>
+    </select>
+    <input type="text" id="hero-phone-model" name="phone_model" placeholder="მობილურის მოდელი (მაგ: iPhone 13)">
     <div class="referral-wrap">
       <span class="referral-icon">🔗</span>
       <input type="text" id="hero-ref" name="referral_code" placeholder="რეფერალის კოდი">
@@ -726,11 +782,44 @@ async function submitToHubSpot(firstname, phone, extra) {
   } catch(e) {}
 }
 
+function heroToggleSphere(e) {
+  e.stopPropagation();
+  const drop = document.getElementById('heroSphereDrop');
+  const btn = document.getElementById('heroSphereBtn');
+  const isOpen = drop.classList.contains('open');
+  drop.classList.toggle('open', !isOpen);
+  btn.classList.toggle('open', !isOpen);
+}
+function heroSphereChange() {
+  const checked = [...document.querySelectorAll('.hero-sphere-chk:checked')];
+  const lbl = document.getElementById('heroSphereLabel');
+  const btn = document.getElementById('heroSphereBtn');
+  const detail = document.getElementById('hero-sphere-detail');
+  if (checked.length) {
+    lbl.textContent = checked.map(c=>c.value).join(', ');
+    btn.classList.add('has-val');
+    detail.style.display = 'block';
+  } else {
+    lbl.textContent = '— აირჩიეთ პროფესია / სფერო —';
+    btn.classList.remove('has-val');
+    detail.style.display = 'none';
+  }
+}
+document.addEventListener('click', function(e) {
+  if (!document.getElementById('heroSphereWrap')?.contains(e.target)) {
+    document.getElementById('heroSphereDrop')?.classList.remove('open');
+    document.getElementById('heroSphereBtn')?.classList.remove('open');
+  }
+});
+function heroGetSpheres() {
+  return [...document.querySelectorAll('.hero-sphere-chk:checked')].map(c=>c.value);
+}
 async function submitHeroLead() {
   const name = document.getElementById('hero-name').value.trim();
   const phone = document.getElementById('hero-phone').value.trim();
   const ref = document.getElementById('hero-ref').value.trim();
-  const sphere = document.getElementById('hero-sphere').value.trim();
+  const spheres = heroGetSpheres();
+  const sphereDetail = document.getElementById('hero-sphere-detail').value.trim();
   const employment = document.getElementById('hero-employment').value;
   const city = document.getElementById('hero-city').value;
   const phoneModel = document.getElementById('hero-phone-model').value.trim();
@@ -739,12 +828,18 @@ async function submitHeroLead() {
   const digits = phone.replace(/\D/g,'');
   if (!name) { setMsg(msg,'სახელი სავალდებულოა',false); return; }
   if (digits.length !== 9) { setMsg(msg,'ტელეფონი უნდა შეიცავდეს 9 ციფრს',false); return; }
+  if (!spheres.length) { setMsg(msg,'პროფესია / სფერო სავალდებულოა',false); return; }
+  if (!sphereDetail) { setMsg(msg,'გთხოვთ დეტალურად აღწეროთ სამუშაო',false); return; }
+  if (!employment) { setMsg(msg,'დასაქმების სტატუსი სავალდებულოა',false); return; }
+  if (!city) { setMsg(msg,'ქალაქი სავალდებულოა',false); return; }
   btn.disabled = true; btn.textContent = 'იგზავნება...';
-  setMsg(msg,'✓ თქვენ წარმატებით დარეგისტრირდით! დაელოდეთ ზარს ჩვენგან!',true);
-  ['hero-name','hero-phone','hero-ref','hero-sphere','hero-phone-model'].forEach(id => document.getElementById(id).value='');
-  document.getElementById('hero-employment').value=''; document.getElementById('hero-city').value='';
-  btn.disabled = false; btn.textContent = 'დარეგისტრირდი — უფასო';
-  const heroNote = [sphere && `სფერო: ${sphere}`, employment && `დასაქმება: ${employment}`, city && `ქალაქი: ${city}`, phoneModel && `მობილური: ${phoneModel}`].filter(Boolean).join(' | ');
+  const heroNote = [
+    `სფერო: ${spheres.join(', ')}`,
+    `სამუშაო: ${sphereDetail}`,
+    employment && `დასაქმება: ${employment}`,
+    city && `ქალაქი: ${city}`,
+    phoneModel && `მობილური: ${phoneModel}`
+  ].filter(Boolean).join(' | ');
   sbInsert('leads', {
     name, phone,
     ref_code: ref || null,
@@ -752,6 +847,13 @@ async function submitHeroLead() {
     reg_date: new Date().toISOString().split('T')[0],
     note: heroNote
   }).catch(() => {});
+  setMsg(msg,'✓ თქვენ წარმატებით დარეგისტრირდით! დაელოდეთ ზარს ჩვენგან!',true);
+  ['hero-name','hero-phone','hero-ref','hero-sphere-detail','hero-phone-model'].forEach(id => document.getElementById(id).value='');
+  document.querySelectorAll('.hero-sphere-chk').forEach(c=>c.checked=false);
+  heroSphereChange();
+  document.getElementById('hero-employment').value='';
+  document.getElementById('hero-city').value='';
+  btn.disabled = false; btn.textContent = 'დარეგისტრირდი — უფასო';
 }
 
 async function submitContactLead() {
