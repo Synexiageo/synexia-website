@@ -842,6 +842,7 @@ async function submitHeroLead() {
     ref_code: ref || null,
     status: 'New Lead',
     reg_date: new Date().toISOString().split('T')[0],
+    city: city || null,
     note: heroNote
   }).catch(() => {});
   setMsg(msg,'✓ თქვენ წარმატებით დარეგისტრირდით! დაელოდეთ ზარს ჩვენგან!',true);
