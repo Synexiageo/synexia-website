@@ -705,6 +705,7 @@ footer img { height: 28px; }
         <div class="cform-field"><label>სახელი და გვარი</label><input type="text" id="c-name" name="firstname" placeholder="გიორგი მაგალითაძე"></div>
         <div class="cform-field"><label>ტელეფონი</label><input type="tel" id="c-phone" name="phone" placeholder="+995 5XX XXX XXX"></div>
         <div class="cform-field"><label>რა სფეროში მუშაობთ?</label><input type="text" id="c-sphere" name="sphere" placeholder="მაგ: IT, ვაჭრობა, განათლება..."></div>
+        <div class="cform-field"><label>დეტალურად აღწერეთ თქვენი სამუშაო</label><textarea id="c-sphere-detail" name="sphere_detail" rows="3" placeholder="მაგ: ავეჯის აწყობა და ფორმირება"></textarea></div>
         <div class="cform-field"><label>კომპანია / დასაქმება?</label>
           <select id="c-employment" name="employment">
             <option value="" disabled selected>აირჩიეთ</option>
@@ -856,6 +857,7 @@ async function submitContactLead() {
   const name = document.getElementById('c-name').value.trim();
   const phone = document.getElementById('c-phone').value.trim();
   const sphere = document.getElementById('c-sphere').value.trim();
+  const sphereDetail = document.getElementById('c-sphere-detail').value.trim();
   const employment = document.getElementById('c-employment').value;
   const city = document.getElementById('c-city').value;
   const phoneModel = document.getElementById('c-phone-model').value.trim();
@@ -864,16 +866,28 @@ async function submitContactLead() {
   const cdigits = phone.replace(/\D/g,'');
   if (!name) { setMsg(msg,'სახელი სავალდებულოა',false); return; }
   if (cdigits.length !== 9) { setMsg(msg,'ტელეფონი უნდა შეიცავდეს 9 ციფრს',false); return; }
+  if (!sphere) { setMsg(msg,'პროფესია / სფერო სავალდებულოა',false); return; }
+  if (!sphereDetail) { setMsg(msg,'გთხოვთ დეტალურად აღწეროთ სამუშაო',false); return; }
+  if (!employment) { setMsg(msg,'დასაქმების სტატუსი სავალდებულოა',false); return; }
+  if (!city) { setMsg(msg,'ქალაქი სავალდებულოა',false); return; }
+  if (!phoneModel) { setMsg(msg,'მობილურის მოდელი სავალდებულოა',false); return; }
   btn.disabled = true; btn.textContent = 'იგზავნება...';
   setMsg(msg,'✓ თქვენ წარმატებით დარეგისტრირდით! დაელოდეთ ზარს ჩვენგან!',true);
-  ['c-name','c-phone','c-sphere','c-phone-model'].forEach(id => document.getElementById(id).value='');
+  ['c-name','c-phone','c-sphere','c-sphere-detail','c-phone-model'].forEach(id => document.getElementById(id).value='');
   document.getElementById('c-employment').value=''; document.getElementById('c-city').value='';
   btn.disabled = false; btn.textContent = 'დარეგისტრირდი';
-  const contactNote = [sphere && `სფერო: ${sphere}`, employment && `დასაქმება: ${employment}`, city && `ქალაქი: ${city}`, phoneModel && `მობილური: ${phoneModel}`].filter(Boolean).join(' | ');
+  const contactNote = [
+    `სფერო: ${sphere}`,
+    `სამუშაო: ${sphereDetail}`,
+    employment && `დასაქმება: ${employment}`,
+    city && `ქალაქი: ${city}`,
+    phoneModel && `მობილური: ${phoneModel}`
+  ].filter(Boolean).join(' | ');
   sbInsert('leads', {
     name, phone,
     status: 'New Lead',
     reg_date: new Date().toISOString().split('T')[0],
+    city: city || null,
     note: contactNote
   }).catch(() => {});
 }
