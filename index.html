@@ -179,10 +179,6 @@ nav {
 }
 .hero-form input::placeholder { color: rgba(255,255,255,0.3); }
 .hero-form input:focus { border-color: var(--blue); }
-.referral-wrap { position: relative; }
-.referral-wrap input { padding-left: 36px; }
-.referral-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 16px; opacity: 0.5; }
-.referral-optional { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); font-size: 10px; color: rgba(255,255,255,0.25); font-family: 'Noto Sans Georgian', sans-serif; }
 .hero-form button {
   background: var(--blue); color: white; border: none;
   border-radius: 8px; padding: 13px; font-size: 15px; font-weight: 600;
@@ -314,25 +310,6 @@ section { padding: 5rem 5%; }
 .tier-total span { font-size: 11px; color: rgba(255,255,255,0.35); font-weight: 400; display: block; margin-top: 2px; }
 .biz-note { background: rgba(37,99,235,0.12); border: 1px solid rgba(37,99,235,0.25); border-radius: 10px; padding: 1rem 1.25rem; font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.6; }
 
-.influencer { background: var(--white); }
-.inf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; margin-top: 3rem; }
-.inf-cards { display: flex; flex-direction: column; gap: 14px; }
-.inf-card { background: var(--gray-light); border-radius: 14px; padding: 1.5rem; border: 1px solid var(--border); }
-.inf-card.highlight { background: var(--black); border-color: var(--blue); }
-.inf-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 0.5rem; color: var(--black); }
-.inf-card.highlight h3 { color: white; }
-.inf-card p { font-size: 14px; color: var(--gray); line-height: 1.6; }
-.inf-card.highlight p { color: rgba(255,255,255,0.55); }
-.inf-amount { font-size: 40px; font-weight: 700; color: var(--blue-light); margin: 0.5rem 0; line-height: 1; }
-.inf-badge { display: inline-block; font-size: 11px; font-weight: 600; background: var(--blue); color: white; border-radius: 20px; padding: 3px 12px; margin-bottom: 0.75rem; }
-.inf-steps { display: flex; flex-direction: column; gap: 12px; }
-.inf-step { display: flex; gap: 12px; align-items: flex-start; }
-.inf-step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--blue-pale); color: var(--blue); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
-.inf-step div h4 { font-size: 14px; font-weight: 600; color: var(--black); margin-bottom: 2px; }
-.inf-step div p { font-size: 13px; color: var(--gray); }
-.inf-cta { margin-top: 1.5rem; background: var(--blue); color: white; border: none; border-radius: 8px; padding: 13px 24px; font-size: 15px; font-weight: 600; cursor: pointer; width: 100%; font-family: 'Noto Sans Georgian', sans-serif; transition: background 0.2s; }
-.inf-cta:hover { background: var(--blue-dark); }
-.inf-note { margin-top: 12px; background: var(--blue-pale); border-radius: 10px; padding: 1rem 1.25rem; font-size: 13px; color: var(--blue-dark); line-height: 1.6; border: 1px solid rgba(37,99,235,0.15); }
 
 .who { background: var(--gray-light); }
 .who-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 14px; margin-top: 2rem; }
@@ -368,7 +345,7 @@ footer img { height: 28px; }
 
 @media (max-width: 768px) {
   .hero { grid-template-columns: 1fr; min-height: auto; padding: 3rem 5%; gap: 2rem; }
-  .about-grid, .hiw-grid, .contact-grid, .inf-grid { grid-template-columns: 1fr; }
+  .about-grid, .hiw-grid, .contact-grid { grid-template-columns: 1fr; }
   .device-float { display: none; }
   .tiers { grid-template-columns: 1fr; }
   .stats { gap: 2rem; }
@@ -400,7 +377,6 @@ footer img { height: 28px; }
     <li><a href="#about">ჩვენს შესახებ</a></li>
     <li><a href="#sectors">სფეროები</a></li>
     <li><a href="#compensation">ანაზღაურება</a></li>
-    <li><a href="#influencer">ინფლუენსერები</a></li>
     <li><a href="#contact">კონტაქტი</a></li>
   </ul>
   <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">დარეგისტრირდი</button>
@@ -452,10 +428,6 @@ footer img { height: 28px; }
     </select>
     <select id="hero-city" name="city"><option value="" disabled selected>— აირჩიეთ ქალაქი —</option><option>თბილისი</option><option>ბათუმი</option><option>რუსთავი</option><option>ქუთაისი</option><option>გორი</option><option>ფოთი</option><option>ზუგდიდი</option><option>ხაშური</option><option>სამტრედია</option><option>მარნეული</option><option>ზესტაფონი</option><option>სიღნაღი</option><option>თელავი</option><option>ქობულეთი</option><option>ახალციხე</option><option>ოზურგეთი</option><option>კასპი</option><option>ჭიათურა</option><option>გარდაბანი</option><option>ბორჯომი</option><option>საგარეჯო</option><option>ყვარელი</option><option>ბოლნისი</option><option>ტყიბული</option><option>წყალტუბო</option><option>ახალქალაქი</option><option>მცხეთა</option><option>გურჯაანი</option><option>დუშეთი</option><option>ქარელი</option><option>ლანჩხუთი</option><option>ახმეტა</option><option>ლაგოდეხი</option><option>საჩხერე</option><option>დედოფლისწყარო</option><option>თერჯოლა</option><option>სენაკი</option><option>თეთრიწყარო</option><option>აბაშა</option><option>მარტვილი</option><option>ნინოწმინდა</option><option>წალკა</option><option>ვალე</option><option>ვანი</option><option>ხობი</option><option>დმანისი</option><option>წალენჯიხა</option><option>ბაღდათი</option><option>ონი</option><option>ჩხოროწყუ</option><option>ამბროლაური</option><option>ქვარი</option><option>ცაგერი</option><option>ჩოხატაური</option><option>ხონი</option><option>მესტია</option><option>სურამი</option><option>ადიგენი</option><option>ხულო</option><option>თიანეთი</option><option>ყაზბეგი</option><option>ჟინვალი</option><option>კაზრეთი</option><option>წეროვანი</option><option>მარტყოფი</option><option>რუისი</option><option>საგურამო</option><option>ვაზიანი</option><option>ბაკურიანი</option><option>ახალგორი</option><option>სხვა</option></select>
     <input type="text" id="hero-phone-model" name="phone_model" placeholder="მობილურის მოდელი (მაგ: iPhone 13)">
-    <div class="referral-wrap">
-      <span class="referral-icon">🔗</span>
-      <input type="text" id="hero-ref" name="referral_code" placeholder="რეფერალის კოდი">
-      <span class="referral-optional">არასავალდებულო</span>
     </div>
     <button type="button" id="hero-submit-btn" onclick="submitHeroLead()">დარეგისტრირდი — უფასო</button>
     <div id="hero-msg" style="display:none;font-size:12px;text-align:center;margin-top:4px;"></div>
@@ -466,7 +438,6 @@ footer img { height: 28px; }
 <div class="stats">
   <div class="stat"><div class="stat-num">20₾</div><div class="stat-label">საათში — ფიზიკური პირი</div></div>
   <div class="stat"><div class="stat-num">200₾</div><div class="stat-label">საათში — 10 თანამშრომელი</div></div>
-  <div class="stat"><div class="stat-num">$10</div><div class="stat-label">ინფლუენსერს — თითო მოყვანილზე</div></div>
   <div class="stat"><div class="stat-num">100%</div><div class="stat-label">ტექ. ცოდნა არ სჭირდება</div></div>
 </div>
 
@@ -566,38 +537,6 @@ footer img { height: 28px; }
   </div>
 </section>
 
-<section class="influencer" id="influencer">
-  <div class="inner">
-    <div class="sec-label">თანამშრომლობა</div>
-    <h2 class="sec-title">ინფლუენსერების პარტნიორობა</h2>
-    <p class="sec-sub">გაუზიარე შენს ფოლოვერებს და გამოიმუშავე $10 ყოველ მოყვანილ ადამიანზე.</p>
-    <div class="inf-grid">
-      <div class="inf-cards">
-        <div class="inf-card highlight">
-          <div class="inf-badge">ანაზღაურება</div>
-          <div class="inf-amount">$10</div>
-          <h3>ყოველ მოყვანილ ადამიანზე</h3>
-          <p>თითოეულ ადამიანზე, ვინც შენი ლინკით დარეგისტრირდება და მინიმუმ 10 საათს ჩაწერს, შენ იღებ $10-ს. რაოდენობა შეუზღუდავია.</p>
-        </div>
-        <div class="inf-card">
-          <h3>📋 შენი ამოცანა</h3>
-          <p style="margin-bottom:0.75rem">ნებისმიერი ფორმატი — Reels, TikTok, YouTube. მიუთითე შენი უნიკალური ლინკი.</p>
-          <p style="font-size:13px;color:#9CA3AF">#Synexia #AIGeorgia #დამატებითიშემოსავალი</p>
-        </div>
-      </div>
-      <div>
-        <div class="inf-steps">
-          <div class="inf-step"><div class="inf-step-num">1</div><div><h4>დაგვიკავშირდი</h4><p>მოგვწერე WhatsApp-ზე — განვიხილავთ პარტნიორობის პირობებს.</p></div></div>
-          <div class="inf-step"><div class="inf-step-num">2</div><div><h4>მიიღე უნიკალური ლინკი</h4><p>Synexia გაძლევს პერსონალურ სარეფერალო ლინკს.</p></div></div>
-          <div class="inf-step"><div class="inf-step-num">3</div><div><h4>გაუზიარე კონტენტი</h4><p>გადაიღე ვიდეო შენი სტილით.</p></div></div>
-          <div class="inf-step"><div class="inf-step-num">4</div><div><h4>მიიღე ანაზღაურება</h4><p>30+ ადამიანის მოყვანის შემდეგ იწყება გადახდა.</p></div></div>
-        </div>
-        <button class="inf-cta" onclick="openInfluencerModal()">გახდი ამბასადორი →</button>
-        <div class="inf-note">⚡ პირველი გადახდა იწყება 30+ დასრულებული კონტრიბუტორის შემდეგ.</div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <section class="who">
   <div class="inner">
@@ -641,29 +580,6 @@ footer img { height: 28px; }
   </div>
 </section>
 
-<!-- INFLUENCER MODAL -->
-<div class="modal-overlay" id="inf-modal" onclick="closeModal('inf-modal')">
-  <div class="modal-box" onclick="event.stopPropagation()">
-    <button class="modal-close" onclick="closeModal('inf-modal')">✕</button>
-    <h3 class="modal-title">ამბასადორის განაცხადი</h3>
-    <p class="modal-sub">შეავსე ფორმა — Synexia-ს გუნდი დაგიკავშირდება 24 საათში</p>
-    <div class="modal-field"><label>სახელი და გვარი *</label><input type="text" id="inf-name" placeholder="სახელი გვარი"></div>
-    <div class="modal-field"><label>ტელეფონი *</label><input type="tel" id="inf-phone" placeholder="+995 5XX XXX XXX"></div>
-    <div class="modal-field"><label>პლატფორმა</label>
-      <select id="inf-platform">
-        <option value="">აირჩიე</option>
-        <option value="Instagram">Instagram</option>
-        <option value="TikTok">TikTok</option>
-        <option value="YouTube">YouTube</option>
-        <option value="Facebook">Facebook</option>
-        <option value="სხვა">სხვა</option>
-      </select>
-    </div>
-    <div class="modal-field"><label>მიმდევრების რაოდენობა</label><input type="text" id="inf-followers" placeholder="მაგ. 5000"></div>
-    <div id="inf-msg" style="display:none;font-size:13px;text-align:center;margin-bottom:8px;"></div>
-    <button class="modal-submit" id="inf-submit-btn" onclick="submitInfluencer()">გაგზავნა</button>
-  </div>
-</div>
 
 <!-- REVIEW MODAL -->
 <div class="modal-overlay" id="review-modal" onclick="closeModal('review-modal')">
@@ -813,7 +729,6 @@ function heroGetSpheres() {
 async function submitHeroLead() {
   const name = document.getElementById('hero-name').value.trim();
   const phone = document.getElementById('hero-phone').value.trim();
-  const ref = document.getElementById('hero-ref').value.trim();
   const spheres = heroGetSpheres();
   const sphereDetail = document.getElementById('hero-sphere-detail').value.trim();
   const employment = document.getElementById('hero-employment').value;
@@ -838,14 +753,13 @@ async function submitHeroLead() {
   ].filter(Boolean).join(' | ');
   sbInsert('leads', {
     name, phone,
-    ref_code: ref || null,
     status: 'New Lead',
     reg_date: new Date().toISOString().split('T')[0],
     city: city || null,
     note: heroNote
   }).catch(() => {});
   setMsg(msg,'✓ თქვენ წარმატებით დარეგისტრირდით! დაელოდეთ ზარს ჩვენგან!',true);
-  ['hero-name','hero-phone','hero-ref','hero-sphere-detail','hero-phone-model'].forEach(id => document.getElementById(id).value='');
+  ['hero-name','hero-phone','hero-sphere-detail','hero-phone-model'].forEach(id => document.getElementById(id).value='');
   document.querySelectorAll('.hero-sphere-chk').forEach(c=>c.checked=false);
   heroSphereChange();
   document.getElementById('hero-employment').value='';
@@ -892,32 +806,9 @@ async function submitContactLead() {
   }).catch(() => {});
 }
 
-function openInfluencerModal() { document.getElementById('inf-modal').classList.add('open'); }
 function openReviewModal() { document.getElementById('review-modal').classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-async function submitInfluencer() {
-  const name = document.getElementById('inf-name').value.trim();
-  const phone = document.getElementById('inf-phone').value.trim();
-  const platform = document.getElementById('inf-platform').value;
-  const followers = document.getElementById('inf-followers').value.trim();
-  const msg = document.getElementById('inf-msg');
-  const btn = document.getElementById('inf-submit-btn');
-  if (!name || !phone) { setMsg(msg,'სახელი და ტელეფონი სავალდებულოა',false); return; }
-  btn.disabled = true; btn.textContent = 'იგზავნება...';
-  try {
-    const noteText = `🎬 ამბასადორი | პლატფორმა: ${platform||'—'} | მიმდევრები: ${followers||'—'}`;
-    await sbInsert('leads', {
-      name, phone,
-      status: 'New Lead',
-      reg_date: new Date().toISOString().split('T')[0],
-      note: noteText
-    });
-    setMsg(msg,'✓ განაცხადი მიღებულია! 24 საათში დაგიკავშირდებით.',true);
-    btn.textContent = 'გაგზავნილია ✓';
-    setTimeout(() => closeModal('inf-modal'), 2500);
-  } catch(e) { setMsg(msg,'შეცდომა. სცადე ხელახლა.',false); btn.disabled=false; btn.textContent='გაგზავნა'; }
-}
 
 let selectedRating = 5;
 function setRating(v) {
