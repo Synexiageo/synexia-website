@@ -130,7 +130,7 @@ async function handleLead(value) {
   try {
     const url = `${GRAPH}/${encodeURIComponent(leadgenId)}` +
       `?fields=id,created_time,ad_id,form_id,field_data` +
-      `&access_token=${encodeURIComponent(process.env.FB_PAGE_TOKEN)}`;
+      `&access_token=${encodeURIComponent(await pageToken())}`;
     const res = await fetch(url);
     raw = await res.json();
     if (!res.ok || raw.error) {
@@ -205,10 +205,32 @@ function validSignature(event, rawBody) {
 
 const PAGE_ID = "964973310043012"; // Synexia
 
+// Graph-ის ნაწილი ("new Pages experience") მხოლოდ გვერდის ტოკენს იღებს.
+// Explorer-ში მომხმარებლის ტოკენის აღება ადვილი ასაცდენია, ამიტომ თუ
+// FB_PAGE_TOKEN პირადი ტოკენია, გვერდისას თვითონ ვიღებთ `/me/accounts`-იდან.
+let PAGE_TOKEN_CACHE = null;
+
+async function pageToken() {
+  if (PAGE_TOKEN_CACHE) return PAGE_TOKEN_CACHE;
+  const t = process.env.FB_PAGE_TOKEN || "";
+  try {
+    const me = await fetch(`${GRAPH}/me?fields=id&access_token=${encodeURIComponent(t)}`).then((r) => r.json());
+    if (me && me.id === PAGE_ID) return (PAGE_TOKEN_CACHE = t);
+    const acc = await fetch(
+      `${GRAPH}/me/accounts?fields=id,access_token&limit=100&access_token=${encodeURIComponent(t)}`
+    ).then((r) => r.json());
+    const p = (acc.data || []).find((x) => String(x.id) === PAGE_ID);
+    if (p && p.access_token) return (PAGE_TOKEN_CACHE = p.access_token);
+  } catch (e) {
+    console.error("გვერდის ტოკენი ვერ მივიღე:", e.message);
+  }
+  return t;
+}
+
 async function fbGet(path, params) {
   const u = new URL(`${GRAPH}/${path}`);
   for (const [k, v] of Object.entries(params || {})) u.searchParams.set(k, v);
-  u.searchParams.set("access_token", process.env.FB_PAGE_TOKEN || "");
+  u.searchParams.set("access_token", await pageToken());
   const res = await fetch(u);
   return res.json();
 }
@@ -227,7 +249,7 @@ async function adminAction(q) {
   if (q.action === "subscribe") {
     const u = new URL(`${GRAPH}/${PAGE_ID}/subscribed_apps`);
     u.searchParams.set("subscribed_fields", "leadgen");
-    u.searchParams.set("access_token", process.env.FB_PAGE_TOKEN || "");
+    u.searchParams.set("access_token", await pageToken());
     const res = await fetch(u, { method: "POST" });
     out.subscribe = await res.json();
   }
@@ -237,6 +259,7 @@ async function adminAction(q) {
   }
 
   out.token = await fbGet("me", { fields: "id,name" });
+  out.page_token_derived = PAGE_TOKEN_CACHE !== process.env.FB_PAGE_TOKEN;
   out.subscribed_apps = await fbGet(`${PAGE_ID}/subscribed_apps`, { fields: "id,name,subscribed_fields" });
   if (q.forms) out.forms = await fbGet(`${PAGE_ID}/leadgen_forms`, { fields: "id,name,status,leads_count", limit: "10" });
 
