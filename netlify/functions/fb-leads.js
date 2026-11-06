@@ -259,7 +259,18 @@ async function adminAction(q) {
   }
 
   out.token = await fbGet("me", { fields: "id,name" });
-  out.page_token_derived = PAGE_TOKEN_CACHE !== process.env.FB_PAGE_TOKEN;
+  out.page_token_derived = !!PAGE_TOKEN_CACHE && PAGE_TOKEN_CACHE !== process.env.FB_PAGE_TOKEN;
+
+  if (q.diag) {
+    const raw = encodeURIComponent(process.env.FB_PAGE_TOKEN || "");
+    const j = (p) => fetch(`${GRAPH}/${p}&access_token=${raw}`).then((r) => r.json()).catch((e) => ({ error: e.message }));
+    const acc = await j("me/accounts?fields=id,name,tasks&limit=100");
+    out.diag = {
+      // ტოკენები არ ბრუნდება — მხოლოდ რა გვერდებს წვდება და რა უფლებებით
+      accounts: acc.error ? acc : (acc.data || []).map((p) => ({ id: p.id, name: p.name, tasks: p.tasks })),
+      permissions: await j("me/permissions?"),
+    };
+  }
   out.subscribed_apps = await fbGet(`${PAGE_ID}/subscribed_apps`, { fields: "id,name,subscribed_fields" });
   if (q.forms) out.forms = await fbGet(`${PAGE_ID}/leadgen_forms`, { fields: "id,name,status,leads_count", limit: "10" });
 
