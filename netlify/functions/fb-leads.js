@@ -10,7 +10,7 @@
 const crypto = require("crypto");
 
 const SB_URL = "https://tsfzuyujfcacultjexsy.supabase.co";
-const GRAPH_V = process.env.FB_GRAPH_VERSION || "v21.0";
+const GRAPH_V = process.env.FB_GRAPH_VERSION || "v27.0";
 const GRAPH = `https://graph.facebook.com/${GRAPH_V}`;
 
 /* ─── ველების გარჩევა ──────────────────────────────────────────────────────
