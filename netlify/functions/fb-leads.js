@@ -199,6 +199,60 @@ function validSignature(event, rawBody) {
   return a.length === b.length && crypto.timingSafeEqual(a, b);
 }
 
+/* ─── სამსახურებრივი შესამოწმებელი ─────────────────────────────────────── */
+// დაცულია FB_VERIFY_TOKEN-ით. ტოკენებს არასდროს აბრუნებს — მხოლოდ იმას,
+// მუშაობს თუ არა. საჭიროა, რადგან სეკრეტები Netlify-შია და აქედან ვერ ვკითხულობ.
+
+const PAGE_ID = "964973310043012"; // Synexia
+
+async function fbGet(path, params) {
+  const u = new URL(`${GRAPH}/${path}`);
+  for (const [k, v] of Object.entries(params || {})) u.searchParams.set(k, v);
+  u.searchParams.set("access_token", process.env.FB_PAGE_TOKEN || "");
+  const res = await fetch(u);
+  return res.json();
+}
+
+async function adminAction(q) {
+  const out = {
+    env: {
+      FB_VERIFY_TOKEN: !!process.env.FB_VERIFY_TOKEN,
+      FB_APP_SECRET: !!process.env.FB_APP_SECRET,
+      FB_PAGE_TOKEN: !!process.env.FB_PAGE_TOKEN,
+      SUPABASE_SERVICE_KEY: !!process.env.SUPABASE_SERVICE_KEY,
+    },
+    graph_version: GRAPH_V,
+  };
+
+  if (q.action === "subscribe") {
+    const u = new URL(`${GRAPH}/${PAGE_ID}/subscribed_apps`);
+    u.searchParams.set("subscribed_fields", "leadgen");
+    u.searchParams.set("access_token", process.env.FB_PAGE_TOKEN || "");
+    const res = await fetch(u, { method: "POST" });
+    out.subscribe = await res.json();
+  }
+
+  if (q.action === "lead" && q.id) {
+    out.lead = await handleLead({ leadgen_id: q.id, form_id: q.form_id || null });
+  }
+
+  out.token = await fbGet("me", { fields: "id,name" });
+  out.subscribed_apps = await fbGet(`${PAGE_ID}/subscribed_apps`, { fields: "id,name,subscribed_fields" });
+  if (q.forms) out.forms = await fbGet(`${PAGE_ID}/leadgen_forms`, { fields: "id,name,status,leads_count", limit: "10" });
+
+  try {
+    const key = process.env.SUPABASE_SERVICE_KEY;
+    const r = await fetch(`${SB_URL}/rest/v1/fb_leads_raw?select=leadgen_id`, {
+      headers: { apikey: key, Authorization: `Bearer ${key}`, Prefer: "count=exact", Range: "0-0" },
+    });
+    out.supabase = { ok: r.ok, status: r.status, count: r.headers.get("content-range") };
+    if (!r.ok) out.supabase.body = (await r.text()).slice(0, 200);
+  } catch (e) {
+    out.supabase = { ok: false, error: e.message };
+  }
+  return out;
+}
+
 /* ─── შესასვლელი ───────────────────────────────────────────────────────── */
 
 exports.handler = async (event) => {
@@ -207,6 +261,15 @@ exports.handler = async (event) => {
     const q = event.queryStringParameters || {};
     if (q["hub.mode"] === "subscribe" && q["hub.verify_token"] === process.env.FB_VERIFY_TOKEN) {
       return { statusCode: 200, headers: { "Content-Type": "text/plain" }, body: q["hub.challenge"] || "" };
+    }
+    const vt = process.env.FB_VERIFY_TOKEN || "";
+    if (q.admin && vt && q.admin.length === vt.length &&
+        crypto.timingSafeEqual(Buffer.from(q.admin), Buffer.from(vt))) {
+      return {
+        statusCode: 200,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(await adminAction(q), null, 1),
+      };
     }
     return { statusCode: 403, body: "Forbidden" };
   }
