@@ -390,7 +390,14 @@ async function adminAction(q) {
     }
   }
   out.subscribed_apps = await fbGet(`${PAGE_ID}/subscribed_apps`, { fields: "id,name,subscribed_fields" });
-  if (q.forms) out.forms = await fbGet(`${PAGE_ID}/leadgen_forms`, { fields: "id,name,status,leads_count", limit: "10" });
+  // privacy_policy აქ იმიტომაა, რომ „Non-Functional Landing Page"-ის უარის დროს
+  // სწორედ ფორმაში ჩაწერილი ბმულია საეჭვო — რეკლამას სხვა გვერდი არ აქვს.
+  if (q.forms) {
+    const f = "id,name,status,leads_count,privacy_policy,legal_content_id";
+    out.forms = q.form_id
+      ? await fbGet(String(q.form_id), { fields: f })
+      : await fbGet(`${PAGE_ID}/leadgen_forms`, { fields: f, limit: "25" });
+  }
 
   try {
     const key = process.env.SUPABASE_SERVICE_KEY;
