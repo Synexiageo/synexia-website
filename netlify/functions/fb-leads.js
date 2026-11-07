@@ -350,6 +350,38 @@ async function adminAction(q) {
     out.last_post_shape = await cfgGet("last_post_shape");
   }
 
+  // რამდენი ლიდი მოვიდა და რამდენი ჩაჯდა. სხვაობა თითქმის ყოველთვის
+  // დუბლიკატია: `on_conflict=phone` ნაცნობ ნომერს ჩუმად აგდებს, მეტა კი
+  // მას ახალ ლიდად ითვლის — სწორედ აქედან ჩანს, სად „იკარგება" ლიდები.
+  if (q.action === "stats") {
+    const k = process.env.SUPABASE_SERVICE_KEY;
+    const day = q.day || new Date(Date.now() + 4 * 3600 * 1000).toISOString().slice(0, 10);
+    const from = `${day}T00:00:00%2B04:00`, to = `${day}T23:59:59%2B04:00`;
+    const r = await fetch(
+      `${SB_URL}/rest/v1/fb_leads_raw?created_at=gte.${from}&created_at=lte.${to}` +
+      `&select=leadgen_id,status,error&limit=2000`,
+      { headers: { apikey: k, Authorization: `Bearer ${k}` } }
+    );
+    const rows = r.ok ? await r.json() : [];
+    const by = {}, why = {};
+    for (const x of rows) {
+      by[x.status] = (by[x.status] || 0) + 1;
+      if (x.status !== "inserted" && x.error) why[x.error] = (why[x.error] || 0) + 1;
+    }
+    // რამდენი FB ლიდი დაჯდა `leads`-ში იმავე დღეს (Make-ისაც ჩათვლით)
+    const lr = await fetch(
+      `${SB_URL}/rest/v1/leads?created_at=gte.${from}&created_at=lte.${to}&id=like.FB-*&select=id`,
+      { headers: { apikey: k, Authorization: `Bearer ${k}`, Prefer: "count=exact", Range: "0-0" } }
+    );
+    out.stats = {
+      day,
+      webhook_mighho: rows.length,           // ჩვენს webhook-ს რამდენი მოუვიდა
+      webhook_statusebi: by,
+      mizezebi: why,
+      leads_shi_chajda: Number((lr.headers.get("content-range") || "/0").split("/")[1]) || 0,
+    };
+  }
+
   if (q.action === "raw" && q.id) {
     const k = process.env.SUPABASE_SERVICE_KEY;
     const r = await fetch(
