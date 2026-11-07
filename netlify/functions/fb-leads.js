@@ -205,26 +205,100 @@ function validSignature(event, rawBody) {
 
 const PAGE_ID = "964973310043012"; // Synexia
 
-// Graph-ის ნაწილი ("new Pages experience") მხოლოდ გვერდის ტოკენს იღებს.
-// Explorer-ში მომხმარებლის ტოკენის აღება ადვილი ასაცდენია, ამიტომ თუ
-// FB_PAGE_TOKEN პირადი ტოკენია, გვერდისას თვითონ ვიღებთ `/me/accounts`-იდან.
+// ─── ტოკენი ───────────────────────────────────────────────────────────────
+// მიზანი: ტოკენს ადამიანი ერთხელ ჩასვამს და აღარასდროს შეეხება.
+//
+// Explorer მოკლევადიან ტოკენს იძლევა (რამდენიმე საათი), და „new Pages
+// experience"-ში გვერდის ზოგი ენდპოინტი პირად ტოკენს საერთოდ არ იღებს.
+// ამიტომ რასაც არ უნდა ჩასვა — პირადს თუ გვერდისას, მოკლეს თუ გრძელს —
+// ჯაჭვს თვითონ ვატარებთ:
+//   მოკლევადიანი → გრძელვადიანი (60 დღე) → გვერდის ტოკენი (უვადო)
+// და მიღებულს `fb_config`-ში ვინახავთ, რომ 60 დღეში ჩუმად არ გაწყდეს.
+//
+// გვერდს ყოველთვის ID-ით ვარჩევთ, არა რიგითობით — ანგარიშზე სხვა გვერდებიც
+// რომ იყოს, ვერასდროს აირჩევა არასწორი.
+
+const APP_ID = process.env.FB_APP_ID || "2203525220564556";
 let PAGE_TOKEN_CACHE = null;
+
+const fbJson = (url) => fetch(url).then((r) => r.json()).catch((e) => ({ error: { message: e.message } }));
+const tok = (t) => `access_token=${encodeURIComponent(t || "")}`;
+
+async function cfgGet(key) {
+  const k = process.env.SUPABASE_SERVICE_KEY;
+  const r = await fetch(`${SB_URL}/rest/v1/fb_config?key=eq.${key}&select=value`, {
+    headers: { apikey: k, Authorization: `Bearer ${k}` },
+  });
+  if (!r.ok) return null;
+  const d = await r.json();
+  return Array.isArray(d) && d.length ? d[0].value : null;
+}
+
+async function cfgSet(key, value) {
+  const k = process.env.SUPABASE_SERVICE_KEY;
+  await fetch(`${SB_URL}/rest/v1/fb_config?on_conflict=key`, {
+    method: "POST",
+    headers: {
+      apikey: k, Authorization: `Bearer ${k}`,
+      "Content-Type": "application/json",
+      Prefer: "return=minimal,resolution=merge-duplicates",
+    },
+    body: JSON.stringify({ key, value }),
+  });
+}
+
+async function isPageToken(t) {
+  if (!t) return false;
+  const me = await fbJson(`${GRAPH}/me?fields=id&${tok(t)}`);
+  return me && String(me.id) === PAGE_ID;
+}
+
+async function derivePageToken(envToken) {
+  // 1. უკვე გვერდის ტოკენია?
+  if (await isPageToken(envToken)) return { token: envToken, how: "env უკვე გვერდის ტოკენი იყო" };
+
+  // 2. პირადი ტოკენი — ჯერ გრძელვადიანად ვაქციოთ, რომ მიღებული
+  //    გვერდის ტოკენი უვადო გამოვიდეს (მოკლედან მოკლე გამოდის).
+  let userToken = envToken;
+  const ex = await fbJson(
+    `${GRAPH}/oauth/access_token?grant_type=fb_exchange_token` +
+    `&client_id=${encodeURIComponent(APP_ID)}` +
+    `&client_secret=${encodeURIComponent(process.env.FB_APP_SECRET || "")}` +
+    `&fb_exchange_token=${encodeURIComponent(envToken || "")}`
+  );
+  const extended = !!(ex && ex.access_token);
+  if (extended) userToken = ex.access_token;
+
+  // 3. გვერდის ტოკენი — ID-ით, არა რიგითობით
+  const acc = await fbJson(`${GRAPH}/me/accounts?fields=id,access_token&limit=200&${tok(userToken)}`);
+  const p = (acc.data || []).find((x) => String(x.id) === PAGE_ID);
+  if (p && p.access_token) {
+    return { token: p.access_token, how: extended ? "გრძელვადიანიდან მიღებული (უვადო)" : "პირადიდან მიღებული" };
+  }
+  return {
+    token: null,
+    how: "ვერ მოიძებნა",
+    pages: (acc.data || []).map((x) => x.id),
+    error: acc.error || ex.error || null,
+  };
+}
 
 async function pageToken() {
   if (PAGE_TOKEN_CACHE) return PAGE_TOKEN_CACHE;
-  const t = process.env.FB_PAGE_TOKEN || "";
   try {
-    const me = await fetch(`${GRAPH}/me?fields=id&access_token=${encodeURIComponent(t)}`).then((r) => r.json());
-    if (me && me.id === PAGE_ID) return (PAGE_TOKEN_CACHE = t);
-    const acc = await fetch(
-      `${GRAPH}/me/accounts?fields=id,access_token&limit=100&access_token=${encodeURIComponent(t)}`
-    ).then((r) => r.json());
-    const p = (acc.data || []).find((x) => String(x.id) === PAGE_ID);
-    if (p && p.access_token) return (PAGE_TOKEN_CACHE = p.access_token);
+    const stored = await cfgGet("page_token");
+    if (stored && (await isPageToken(stored))) return (PAGE_TOKEN_CACHE = stored);
+    const got = await derivePageToken(process.env.FB_PAGE_TOKEN);
+    if (got.token) {
+      await cfgSet("page_token", got.token);
+      await cfgSet("page_token_note", got.how);
+      return (PAGE_TOKEN_CACHE = got.token);
+    }
+    console.error("გვერდის ტოკენი ვერ მივიღე:", JSON.stringify(got));
   } catch (e) {
-    console.error("გვერდის ტოკენი ვერ მივიღე:", e.message);
+    console.error("ტოკენის მოძიება ჩავარდა:", e.message);
   }
-  return t;
+  return process.env.FB_PAGE_TOKEN || "";
 }
 
 async function fbGet(path, params) {
@@ -260,6 +334,7 @@ async function adminAction(q) {
 
   out.token = await fbGet("me", { fields: "id,name" });
   out.page_token_derived = !!PAGE_TOKEN_CACHE && PAGE_TOKEN_CACHE !== process.env.FB_PAGE_TOKEN;
+  out.page_token_note = await cfgGet("page_token_note");
 
   if (q.diag) {
     const raw = encodeURIComponent(process.env.FB_PAGE_TOKEN || "");
@@ -271,6 +346,7 @@ async function adminAction(q) {
       permissions: await j("me/permissions?"),
       // ამ ორით ვარჩევთ, გრანტის პრობლემაა თუ გვერდზე როლის
       page_direct: await j(`${PAGE_ID}?fields=id,name`),
+      derive: await (async () => { const g = await derivePageToken(process.env.FB_PAGE_TOKEN); delete g.token; return g; })(),
       businesses: await j("me/businesses?fields=id,name"),
     };
     if (q.revoke) {
