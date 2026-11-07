@@ -350,6 +350,18 @@ async function adminAction(q) {
     out.last_post_shape = await cfgGet("last_post_shape");
   }
 
+  if (q.action === "raw" && q.id) {
+    const k = process.env.SUPABASE_SERVICE_KEY;
+    const r = await fetch(
+      `${SB_URL}/rest/v1/fb_leads_raw?leadgen_id=eq.${encodeURIComponent(q.id)}&select=raw`,
+      { headers: { apikey: k, Authorization: `Bearer ${k}` } }
+    );
+    const d = r.ok ? await r.json() : [];
+    const raw = d.length ? d[0].raw : null;
+    out.raw = raw;
+    if (raw && raw.field_data) out.parsed = parseFields(raw.field_data);
+  }
+
   if (q.action === "lead" && q.id) {
     out.lead = await handleLead({ leadgen_id: q.id, form_id: q.form_id || null });
   }
