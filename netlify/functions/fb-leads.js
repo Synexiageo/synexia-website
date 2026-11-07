@@ -338,6 +338,18 @@ async function adminAction(q) {
     out.subscribe = await res.json();
   }
 
+  if (q.action === "recent") {
+    const k = process.env.SUPABASE_SERVICE_KEY;
+    const r = await fetch(
+      `${SB_URL}/rest/v1/fb_leads_raw?select=leadgen_id,form_id,status,error,created_at&order=created_at.desc&limit=10`,
+      { headers: { apikey: k, Authorization: `Bearer ${k}` } }
+    );
+    out.recent = r.ok ? await r.json() : { status: r.status, body: (await r.text()).slice(0, 200) };
+    out.last_post = await cfgGet("last_post");
+    out.last_bad_signature = await cfgGet("last_bad_signature");
+    out.last_post_shape = await cfgGet("last_post_shape");
+  }
+
   if (q.action === "lead" && q.id) {
     out.lead = await handleLead({ leadgen_id: q.id, form_id: q.form_id || null });
   }
@@ -408,14 +420,18 @@ exports.handler = async (event) => {
     ? Buffer.from(event.body || "", "base64").toString("utf8")
     : (event.body || "");
 
+  await cfgSet("last_post", new Date().toISOString()).catch(() => {});
   if (!validSignature(event, rawBody)) {
     console.error("ხელმოწერა არ ემთხვევა — მოთხოვნა უარყოფილია");
+    await cfgSet("last_bad_signature", new Date().toISOString()).catch(() => {});
     return { statusCode: 401, body: "Bad signature" };
   }
 
   let payload;
   try { payload = JSON.parse(rawBody); }
   catch { return { statusCode: 200, body: "ok" }; } // Meta-ს 200 სჭირდება, თორემ ხელახლა აგზავნის
+
+  await cfgSet("last_post_shape", JSON.stringify(payload).slice(0, 400)).catch(() => {});
 
   const jobs = [];
   for (const entry of payload.entry || []) {
