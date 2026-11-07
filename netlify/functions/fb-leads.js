@@ -269,7 +269,15 @@ async function adminAction(q) {
       // ტოკენები არ ბრუნდება — მხოლოდ რა გვერდებს წვდება და რა უფლებებით
       accounts: acc.error ? acc : (acc.data || []).map((p) => ({ id: p.id, name: p.name, tasks: p.tasks })),
       permissions: await j("me/permissions?"),
+      // ამ ორით ვარჩევთ, გრანტის პრობლემაა თუ გვერდზე როლის
+      page_direct: await j(`${PAGE_ID}?fields=id,name`),
+      businesses: await j("me/businesses?fields=id,name"),
     };
+    if (q.revoke) {
+      // უფლებების მოხსნა — შემდეგ ჯერზე ფეისბუქი თავიდან იკითხავს გვერდებს
+      out.diag.revoked = await fetch(`${GRAPH}/me/permissions?access_token=${raw}`, { method: "DELETE" })
+        .then((r) => r.json()).catch((e) => ({ error: e.message }));
+    }
   }
   out.subscribed_apps = await fbGet(`${PAGE_ID}/subscribed_apps`, { fields: "id,name,subscribed_fields" });
   if (q.forms) out.forms = await fbGet(`${PAGE_ID}/leadgen_forms`, { fields: "id,name,status,leads_count", limit: "10" });
