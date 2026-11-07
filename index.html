@@ -455,7 +455,7 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
               <div class="hstat-l">მიღებულ საათზე</div>
             </div>
             <div>
-              <div class="hstat-v" id="statPeople">1000+</div>
+              <div class="hstat-v" id="statPeople">5000+</div>
               <div class="hstat-l">კონტრიბუტორი</div>
             </div>
             <div>
@@ -536,7 +536,8 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
     </div>
     <p class="calc-note rv" style="margin-top:18px">
       გაანგარიშება სავარაუდოა და ეფუძნება 25₾ ტარიფს მიღებულ საათზე. ზუსტი თანხა დამოკიდებულია იმაზე,
-      რამდენი ჩაწერილი საათი გაივლის ხარისხის შემოწმებას.
+      რამდენი ჩაწერილი საათი გაივლის ხარისხის შემოწმებას. ერთ ადამიანს თვეში მაქსიმუმ
+      100 მიღებული საათი ეთვლება — ანუ 2 500₾.
     </p>
   </div>
 </section>
@@ -546,10 +547,10 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
   <div class="inner">
     <div class="rv" style="text-align:center">
       <span class="eyebrow">აღჭურვილობა</span>
-      <h2 class="sec-title">შენი ტელეფონი გვარგება?</h2>
+      <h2 class="sec-title">დატესტე შენი ტელეფონის ვარგისიანობა</h2>
       <p class="sec-lead" style="margin-left:auto;margin-right:auto">
         ვიდეოს ხარისხი კამერაზეა დამოკიდებული, ამიტომ მოდელების სია შეზღუდულია.
-        ჩაწერე შენი ტელეფონი და მაშინვე გაიგებ — ზარის ლოდინი არ დაგჭირდება.
+        ჩაწერე შენი ტელეფონის ზუსტი მოდელი და გაიგე, ერგება თუ არა ის ჩვენს მოთხოვნებს.
       </p>
     </div>
 
@@ -951,6 +952,7 @@ document.addEventListener('click', e => {
 // ── კალკულატორი ─────────────────────────────────
 // კვირა → თვე: 52/12 ≈ 4.33, თორემ „4 კვირა" თვეში ორ დღეს კარგავს
 const WEEKS_PER_MONTH = 52 / 12;
+const MAX_HOURS_PER_PERSON = 100;   // თვეში, ერთ ადამიანზე — 100 × 25₾ = 2 500₾
 const fmt = n => Math.round(n).toLocaleString('ka-GE').replace(/,/g, ' ');
 function calcUpdate() {
   const h = +document.getElementById('calcH').value;
@@ -959,9 +961,12 @@ function calcUpdate() {
   document.getElementById('calcHv').textContent = h;
   document.getElementById('calcDv').textContent = d;
   document.getElementById('calcPv').textContent = p;
-  const hoursMonth = h * d * WEEKS_PER_MONTH * p;
+  // ერთ ადამიანს თვეში მაქსიმუმ 100 მიღებული საათი ეთვლება — ანუ 2 500₾.
+  // ჭერის გარეშე სლაიდერი ისეთ თანხას აჩვენებდა, რასაც ვერ გავცემდით.
+  const perPerson  = Math.min(h * d * WEEKS_PER_MONTH, MAX_HOURS_PER_PERSON);
+  const hoursMonth = perPerson * p;
   document.getElementById('calcSum').textContent   = fmt(hoursMonth * RATE) + '₾';
-  document.getElementById('calcWeek').textContent  = fmt(h * d * p * RATE) + '₾';
+  document.getElementById('calcWeek').textContent  = fmt((hoursMonth / WEEKS_PER_MONTH) * RATE) + '₾';
   document.getElementById('calcHours').textContent = fmt(hoursMonth);
   document.getElementById('calcYear').textContent  = fmt(hoursMonth * RATE * 12) + '₾';
 }
@@ -1105,19 +1110,11 @@ async function submitMount() {
   setTimeout(() => { btn.disabled = false; btn.textContent = 'შემიკვეთე სამაგარი'; }, 4000);
 }
 
-// ── ცოცხალი ციფრი: რამდენი კონტრიბუტორია ────────
-// count=exact + Range 0-0 — მხოლოდ ციფრი მოდის, სტრიქონები არა
-async function loadStats() {
-  try {
-    const res = await fetch(
-      `${SB_URL}/rest/v1/leads?select=id&status=in.("Onboarded","Onboarded both","Onboarded minute")`, {
-      headers: { 'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY,
-                 'Prefer': 'count=exact', 'Range': '0-0' }
-    });
-    const n = parseInt((res.headers.get('content-range') || '').split('/')[1]);
-    if (n > 0) document.getElementById('statPeople').textContent = fmt(Math.floor(n / 50) * 50) + '+';
-  } catch (e) { /* ციფრი უბრალოდ ნაგულისხმევი რჩება */ }
-}
+// ── კონტრიბუტორების ციფრი ───────────────────────
+// ადრე ეს ციფრი ბაზიდან ცოცხლად მოდიოდა და `Onboarded` სტატუსებს ითვლიდა.
+// ის მხოლოდ ამჟამად აქტიურებს ხედავდა (დღეს 1 295), ამიტომ გვერდზე
+// დაწერილზე ნაკლებს აჩვენებდა. ციფრი ახლა HTML-შია ჩაწერილი და ხელით იცვლება.
+async function loadStats() { /* ციფრი სტატიკურია — იხ. #statPeople */ }
 
 // ── მოძრაობა ────────────────────────────────────
 function goReg() {
