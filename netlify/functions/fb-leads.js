@@ -269,17 +269,27 @@ async function derivePageToken(envToken) {
   const extended = !!(ex && ex.access_token);
   if (extended) userToken = ex.access_token;
 
-  // 3. გვერდის ტოკენი — ID-ით, არა რიგითობით
+  const suffix = extended ? " (გრძელვადიანიდან — უვადო)" : " (მოკლევადიანიდან)";
+
+  // 3. პირდაპირ გვერდიდან. ბიზნესის საკუთრებაში მყოფი გვერდი `/me/accounts`-ში
+  //    არ ჩანს, ამიტომ ეს ვარიანტი პირველია — სწორედ ჩვენი შემთხვევაა.
+  const direct = await fbJson(`${GRAPH}/${PAGE_ID}?fields=access_token&${tok(userToken)}`);
+  if (direct && direct.access_token) {
+    return { token: direct.access_token, how: "გვერდიდან პირდაპირ" + suffix };
+  }
+
+  // 4. სათადარიგო — მომხმარებლის გვერდების სია, ID-ით და არა რიგითობით
   const acc = await fbJson(`${GRAPH}/me/accounts?fields=id,access_token&limit=200&${tok(userToken)}`);
   const p = (acc.data || []).find((x) => String(x.id) === PAGE_ID);
   if (p && p.access_token) {
-    return { token: p.access_token, how: extended ? "გრძელვადიანიდან მიღებული (უვადო)" : "პირადიდან მიღებული" };
+    return { token: p.access_token, how: "/me/accounts-იდან" + suffix };
   }
+
   return {
     token: null,
     how: "ვერ მოიძებნა",
     pages: (acc.data || []).map((x) => x.id),
-    error: acc.error || ex.error || null,
+    error: direct.error || acc.error || ex.error || null,
   };
 }
 
