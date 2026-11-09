@@ -336,6 +336,18 @@ input[type=range]::-moz-range-thumb {
 .mount-list { margin:20px 0 26px; }
 .mount-list li { list-style:none; display:flex; gap:11px; padding:8px 0; font-size:14.5px; color:var(--text-mid); }
 .mount-list li::before { content:"✓"; color:var(--money); font-weight:800; flex-shrink:0; }
+.mopts { display:grid; gap:10px; margin-bottom:16px; }
+.mopt { display:flex; align-items:center; gap:12px; cursor:pointer; padding:13px 15px;
+        border:1px solid var(--line); border-radius:13px; background:var(--surface);
+        transition:border-color .15s, background .15s; }
+.mopt:hover { border-color:rgba(255,255,255,.18); }
+.mopt input { appearance:none; width:17px; height:17px; flex-shrink:0; margin:0; cursor:pointer;
+              border:1.5px solid var(--text-dim); border-radius:50%; transition:border-color .15s; }
+.mopt input:checked { border-color:var(--money); border-width:5px; }
+.mopt input:focus-visible { outline:2px solid var(--cyan); outline-offset:2px; }
+.mopt:has(input:checked) { border-color:var(--money); background:var(--surface-2); }
+.mopt-n { flex:1; font-size:14.5px; font-weight:600; color:var(--text); }
+.mopt-p { font-size:15px; font-weight:800; color:var(--money); font-variant-numeric:tabular-nums; }
 
 /* ── მიმოხილვები ───────────────────────────────── */
 .rev { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:24px; }
@@ -736,6 +748,18 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
           <li>შეკვეთის შემდეგ ოპერატორი დაგიკავშირდება და მიწოდებას შეათანხმებს</li>
         </ul>
         <div class="card">
+          <div class="mopts" role="radiogroup" aria-label="აირჩიე სამაგარი">
+            <label class="mopt">
+              <input type="radio" name="m-model" value="standard" checked>
+              <span class="mopt-n">სტანდარტული სამაგარი</span>
+              <span class="mopt-p">29₾</span>
+            </label>
+            <label class="mopt">
+              <input type="radio" name="m-model" value="ulanzi">
+              <span class="mopt-n">Ulanzi</span>
+              <span class="mopt-p">49₾</span>
+            </label>
+          </div>
           <div class="two">
             <div class="field"><input class="inp" id="m-name" placeholder="სახელი და გვარი"></div>
             <div class="field"><input class="inp" id="m-phone" placeholder="ტელეფონი (9 ციფრი)" inputmode="numeric"></div>
@@ -1092,13 +1116,19 @@ async function submitMount() {
   const msg   = document.getElementById('m-msg');
   const btn   = document.getElementById('m-btn');
   const digits = phone.replace(/\D/g, '');
+  // ფასი აქ ჩამოიწერება და ბაზაში შეკვეთასთან ერთად ინახება — ტარიფის
+  // შეცვლის შემდეგ ძველ შეკვეთას ის ფასი უნდა შერჩეს, რომლითაც შეუკვეთეს.
+  const MOUNTS = { standard: 29, ulanzi: 49 };
+  const picked = document.querySelector('input[name="m-model"]:checked');
+  const model  = picked && MOUNTS[picked.value] ? picked.value : 'standard';
   if (!name)               { setMsg(msg, 'სახელი სავალდებულოა', false); markBad(['m-name']); return; }
   if (digits.length !== 9) { setMsg(msg, 'ტელეფონი უნდა შეიცავდეს 9 ციფრს', false); markBad(['m-phone']); return; }
   if (!addr)               { setMsg(msg, 'მიუთითეთ ქალაქი და მისამართი', false); markBad(['m-city']); return; }
 
   btn.disabled = true; btn.textContent = 'იგზავნება...';
   try {
-    await sbInsert('mount_orders', { name, phone: '+995' + digits, address: addr, status: 'new' });
+    await sbInsert('mount_orders', { name, phone: '+995' + digits, address: addr, status: 'new',
+                                     model, price: MOUNTS[model] });
     setMsg(msg, '✓ შეკვეთა მიღებულია! ოპერატორი დაგიკავშირდებათ მიწოდების შესათანხმებლად.', true);
     btn.textContent = '✓ გაგზავნილია';
     ['m-name','m-phone','m-city'].forEach(id => document.getElementById(id).value = '');
