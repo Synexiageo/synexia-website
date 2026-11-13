@@ -1062,6 +1062,36 @@ function markBad(ids) {
   });
 }
 
+// ── საიდან მოვიდა ────────────────────────────────────────────
+// რეკლამის ბმულს utm_* პარამეტრები მოჰყვება (Ads Manager → URL parameters).
+// პირველ შემოსვლას 30 დღე ვიმახსოვრებთ: ხშირად ჯერ რეკლამიდან ნახულობენ,
+// რეგისტრირდებიან კი მოგვიანებით, პირდაპირ. CRM-ში ლიდის „source" ველში ჩანს.
+const ATTR_KEY = 'sx_attr';
+function readAttribution() {
+  const q = new URLSearchParams(location.search);
+  const pick = k => (q.get(k) || '').trim().slice(0, 120);
+  const now = {
+    src: pick('utm_source'), med: pick('utm_medium'), camp: pick('utm_campaign'),
+    ad: pick('utm_content'), set: pick('utm_term'), fb: q.has('fbclid') ? '1' : '',
+    ref: document.referrer ? (() => { try { return new URL(document.referrer).hostname; } catch (e) { return ''; } })() : ''
+  };
+  if (now.ref === location.hostname) now.ref = '';
+  const fresh = now.src || now.camp || now.fb;
+  try {
+    const old = JSON.parse(localStorage.getItem(ATTR_KEY) || 'null');
+    if (!fresh && old && Date.now() - old.at < 30 * 864e5) return old;
+    if (fresh || now.ref) localStorage.setItem(ATTR_KEY, JSON.stringify({ ...now, at: Date.now() }));
+  } catch (e) {}
+  return now;
+}
+const ATTR = readAttribution();
+// „facebook | კამპანია | ადსეტი | რეკლამა" — CRM-ში ერთი სტრიქონი
+function attributionText() {
+  const a = ATTR || {};
+  const src = a.src || (a.fb ? 'facebook' : '') || a.ref || 'პირდაპირ';
+  return [src, a.camp, a.set, a.ad].filter(Boolean).join(' | ').slice(0, 300);
+}
+
 // ლიდის ჩაწერა — ველების სახელები და note-ის ფორმატი CRM-ს ზუსტად უნდა ემთხვეოდეს
 async function submitLead(p) {
   const name    = document.getElementById(p + '-name').value.trim();
@@ -1091,10 +1121,16 @@ async function submitLead(p) {
     model && `მობილური: ${model}`
   ].filter(Boolean).join(' | ');
 
-  sbInsert('leads', {
+  // წყარო დამატებითია — თუ მის გამო ჩაწერა ჩავარდა, ლიდი მის გარეშე მაინც ჩაიწეროს
+  const lead = {
     name, phone, status: 'New Lead',
     reg_date: new Date().toISOString().split('T')[0],
-    city: city || null, note
+    city: city || null, note,
+    source: attributionText()
+  };
+  sbInsert('leads', lead).catch(() => {
+    delete lead.source;
+    return sbInsert('leads', lead);
   }).catch(() => {});
   submitToHubSpot(name, phone, { sphere: spheres.join(', '), city, phone_model: model });
 
