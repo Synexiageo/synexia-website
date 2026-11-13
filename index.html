@@ -18,6 +18,20 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<!-- Meta Pixel — Dataset „Synexia Website". Lead-ს submitLead აგზავნის,
+     მხოლოდ ბაზაში წარმატებით ჩაწერის შემდეგ. სახელი/ტელეფონი არ იგზავნება. -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1046956205093078');
+fbq('track', 'PageView');
+</script>
 <style>
 :root {
   --bg:        #08080B;
@@ -416,6 +430,7 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
 </style>
 </head>
 <body>
+<noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=1046956205093078&ev=PageView&noscript=1"></noscript>
 
 <div id="progress"></div>
 
@@ -1128,9 +1143,14 @@ async function submitLead(p) {
     city: city || null, note,
     source: attributionText()
   };
+  // Lead ფეისბუქს მხოლოდ მაშინ ეგზავნება, როცა ლიდი ბაზაში ნამდვილად ჩაიწერა —
+  // თორემ ის არასწორ ხალხს ისწავლის. eventID = ლიდის id (sbInsert ავსებს),
+  // რომ სერვერიდან მოსულ იგივე მოვლენასთან არ გაორმაგდეს.
   sbInsert('leads', lead).catch(() => {
     delete lead.source;
     return sbInsert('leads', lead);
+  }).then(() => {
+    try { if (window.fbq) fbq('track', 'Lead', { content_name: p === 'r' ? 'registration' : 'contact' }, { eventID: lead.id }); } catch (e) {}
   }).catch(() => {});
   submitToHubSpot(name, phone, { sphere: spheres.join(', '), city, phone_model: model });
 
