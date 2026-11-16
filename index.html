@@ -10,11 +10,15 @@
 <meta property="og:url" content="https://synexia.ge/">
 <meta property="og:title" content="იმუშავე ერთხელ, გამოიმუშავე ორჯერ — Synexia">
 <meta property="og:description" content="შენი ხელების მოძრაობა მომავლის AI-ს ამზადებს. 25₾-მდე მიღებულ საათზე, სმარტფონით, შენივე სამუშაო ადგილიდან.">
-<meta property="og:image" content="https://synexia.ge/assets/img-d8223213.png">
+<meta property="og:image" content="https://synexia.ge/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="კონტრიბუტორი თავსამაგრზე დამაგრებული ტელეფონით">
 <meta property="og:locale" content="ka_GE">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#08080B">
 <link rel="icon" href="assets/img-94564b98.png">
+<link rel="preload" as="image" href="assets/img-815c7820.webp" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -59,10 +63,14 @@ body {
   background:var(--bg); color:var(--text); line-height:1.65;
   overflow-x:hidden; -webkit-font-smoothing:antialiased;
 }
-img { display:block; max-width:100%; }
+img { display:block; max-width:100%; height:auto; }
 a { color:inherit; text-decoration:none; }
 button, input, select, textarea { font:inherit; color:inherit; }
 ::selection { background:var(--blue); color:#fff; }
+:focus-visible { outline:2px solid var(--cyan); outline-offset:3px; border-radius:6px; }
+.inp:focus-visible { outline:none; }
+svg.i { width:1em; height:1em; flex-shrink:0; fill:none; stroke:currentColor; stroke-width:1.8;
+  stroke-linecap:round; stroke-linejoin:round; }
 
 .inner { max-width:var(--max); margin:0 auto; padding:0 22px; }
 .eyebrow {
@@ -94,7 +102,7 @@ nav {
 .nav-in { max-width:var(--max); margin:0 auto; padding:13px 22px;
   display:flex; align-items:center; gap:clamp(14px,2.4vw,28px); }
 .nav-brand { display:flex; align-items:center; gap:10px; margin-right:auto; flex-shrink:0; }
-.nav-brand img { height:38px; width:auto; flex-shrink:0; }
+.nav-brand img { height:34px; width:auto; flex-shrink:0; }
 .nav-links { display:flex; gap:clamp(14px,2vw,26px); }
 .nav-links a {
   font-size:14px; color:var(--text-mid); font-weight:500;
@@ -179,19 +187,20 @@ select.inp { appearance:none; cursor:pointer;
   background-repeat:no-repeat; background-position:right 14px center; padding-right:34px; }
 select.inp option { background:#12121A; }
 textarea.inp { resize:vertical; min-height:72px; }
-.form-msg { display:none; font-size:13.5px; margin-top:12px; font-weight:600; }
+.form-msg { display:none; font-size:13.5px; margin-top:12px; font-weight:600; line-height:1.5; }
+.form-msg a { text-decoration:underline; }
 .two { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
 
 /* მრავალარჩევანი — სფეროები */
 .multi { position:relative; }
 .multi-btn {
-  width:100%; text-align:right; background:var(--bg-soft); border:1px solid var(--line);
+  width:100%; text-align:left; background:var(--bg-soft); border:1px solid var(--line);
   border-radius:12px; padding:12px 14px; font-size:15px; cursor:pointer; color:var(--text-dim);
   display:flex; align-items:center; gap:10px;
 }
 .multi-btn.has-val { color:var(--text); }
 .multi-btn::after {
-  content:""; margin-right:auto; width:8px; height:8px; flex-shrink:0;
+  content:""; margin-left:auto; width:8px; height:8px; flex-shrink:0;
   border-right:2px solid var(--text-dim); border-bottom:2px solid var(--text-dim);
   transform:rotate(45deg) translateY(-2px); transition:transform .2s;
 }
@@ -227,7 +236,10 @@ textarea.inp { resize:vertical; min-height:72px; }
   font-size:clamp(40px,7vw,66px); font-weight:900; letter-spacing:-.035em; color:var(--money);
   line-height:1; font-variant-numeric:tabular-nums;
 }
+.calc-amount small { font-size:.36em; font-weight:800; letter-spacing:0; margin-left:4px; }
 .calc-period { font-size:14px; color:var(--text-mid); margin-top:10px; }
+.calc-warn { margin-top:20px; padding:11px 14px; border-radius:12px; font-size:13px; line-height:1.55; text-align:left;
+  color:#F3DFA6; background:rgba(251,191,36,.08); border:1px solid rgba(251,191,36,.24); }
 .calc-split { display:flex; justify-content:center; gap:clamp(18px,4vw,40px); margin-top:26px;
   padding-top:22px; border-top:1px solid rgba(52,211,153,.18); }
 .calc-split div { text-align:center; }
@@ -259,22 +271,22 @@ input[type=range]::-moz-range-thumb {
   border:1px solid var(--line); background:var(--surface); align-items:flex-start; gap:14px;
 }
 .ph-result.show { display:flex; }
-.ph-icon { font-size:26px; line-height:1; flex-shrink:0; }
+.ph-icon { font-size:26px; line-height:1; flex-shrink:0; display:flex; }
 .ph-title { font-weight:800; font-size:17px; }
 .ph-text { font-size:14.5px; color:var(--text-mid); margin-top:4px; }
 .ph-result.ok   { border-color:rgba(52,211,153,.4); background:rgba(52,211,153,.08); }
-.ph-result.ok .ph-title { color:var(--money); }
+.ph-result.ok .ph-title, .ph-result.ok .ph-icon { color:var(--money); }
 .ph-result.maybe{ border-color:rgba(251,191,36,.4); background:rgba(251,191,36,.08); }
-.ph-result.maybe .ph-title { color:var(--warn); }
+.ph-result.maybe .ph-title, .ph-result.maybe .ph-icon { color:var(--warn); }
 .ph-result.no   { border-color:rgba(248,113,113,.4); background:rgba(248,113,113,.08); }
-.ph-result.no .ph-title { color:var(--bad); }
+.ph-result.no .ph-title, .ph-result.no .ph-icon { color:var(--bad); }
 .ph-list { margin-top:26px; border:1px solid var(--line); border-radius:14px; overflow:hidden; }
 .ph-list summary {
   padding:16px 20px; cursor:pointer; font-weight:700; font-size:15px;
   list-style:none; display:flex; align-items:center; gap:10px; background:var(--surface);
 }
 .ph-list summary::-webkit-details-marker { display:none; }
-.ph-list summary::after { content:"+"; margin-right:auto; color:var(--text-dim); font-size:20px; font-weight:400; }
+.ph-list summary::after { content:"+"; margin-left:auto; color:var(--text-dim); font-size:20px; font-weight:400; }
 .ph-list[open] summary::after { content:"−"; }
 .ph-list-body { padding:4px 20px 20px; }
 .ph-row { display:flex; gap:14px; padding:11px 0; border-top:1px solid var(--line-soft); font-size:14.5px; }
@@ -293,13 +305,16 @@ input[type=range]::-moz-range-thumb {
   padding:24px; transition:transform .2s, border-color .2s, background .2s;
 }
 .tile:hover { transform:translateY(-3px); border-color:rgba(59,130,246,.4); background:var(--surface-2); }
-.tile .ico { font-size:26px; margin-bottom:12px; }
+.tile .ico { width:46px; height:46px; border-radius:13px; display:grid; place-items:center; font-size:22px;
+  margin-bottom:16px; color:var(--cyan); background:rgba(34,211,238,.09); border:1px solid rgba(34,211,238,.2); }
 .tile h4 { font-size:16.5px; font-weight:700; margin-bottom:6px; }
 .tile p { font-size:14px; color:var(--text-mid); }
 
 .sphere-cols { display:grid; grid-template-columns:1.25fr .75fr; gap:16px; margin-top:44px; }
 .sphere-box { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:26px; }
 .sphere-box.yes { border-color:rgba(52,211,153,.26); }
+.sphere-box h4 .i { font-size:20px; color:var(--text-dim); }
+.sphere-box.yes h4 .i { color:var(--money); }
 .sphere-box h4 { font-size:17px; font-weight:800; margin-bottom:4px; display:flex; align-items:center; gap:9px; }
 .sphere-box .hint { font-size:13px; color:var(--text-dim); margin-bottom:18px; }
 .chips { display:flex; flex-wrap:wrap; gap:8px; }
@@ -343,25 +358,41 @@ input[type=range]::-moz-range-thumb {
 .store svg { width:20px; height:20px; flex-shrink:0; }
 .store small { display:block; font-size:10.5px; font-weight:600; opacity:.6; line-height:1.3; }
 
-/* ── სამაგარი ──────────────────────────────────── */
-.mount-wrap { display:grid; grid-template-columns:.9fr 1.1fr; gap:clamp(26px,4vw,54px); align-items:center; margin-top:44px; }
-.mount-img { border-radius:22px; overflow:hidden; border:1px solid var(--line);
-  background:#fff; padding:clamp(14px,2vw,26px); }
-.mount-list { margin:20px 0 26px; }
+/* ── სამაგრი ──────────────────────────────────── */
+.mount-buy { display:grid; grid-template-columns:1.25fr .75fr; gap:clamp(20px,3vw,36px); align-items:center; margin-top:32px; }
+.mount-more { display:grid; grid-template-columns:1fr 1fr; gap:clamp(20px,4vw,48px); align-items:start; margin-top:30px; }
+.mount-more .sec-lead { margin-top:0; }
+.mount-list { margin:0; }
 .mount-list li { list-style:none; display:flex; gap:11px; padding:8px 0; font-size:14.5px; color:var(--text-mid); }
 .mount-list li::before { content:"✓"; color:var(--money); font-weight:800; flex-shrink:0; }
-.mopts { display:grid; gap:10px; margin-bottom:16px; }
-.mopt { display:flex; align-items:center; gap:12px; cursor:pointer; padding:13px 15px;
-        border:1px solid var(--line); border-radius:13px; background:var(--surface);
-        transition:border-color .15s, background .15s; }
-.mopt:hover { border-color:rgba(255,255,255,.18); }
-.mopt input { appearance:none; width:17px; height:17px; flex-shrink:0; margin:0; cursor:pointer;
-              border:1.5px solid var(--text-dim); border-radius:50%; transition:border-color .15s; }
-.mopt input:checked { border-color:var(--money); border-width:5px; }
-.mopt input:focus-visible { outline:2px solid var(--cyan); outline-offset:2px; }
-.mopt:has(input:checked) { border-color:var(--money); background:var(--surface-2); }
-.mopt-n { flex:1; font-size:14.5px; font-weight:600; color:var(--text); }
-.mopt-p { font-size:15px; font-weight:800; color:var(--money); font-variant-numeric:tabular-nums; }
+.mcards { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.mcard { position:relative; display:flex; flex-direction:column; cursor:pointer; overflow:hidden;
+  border:1.5px solid var(--line); border-radius:16px; background:var(--bg-soft);
+  transition:border-color .15s, box-shadow .15s, transform .15s; }
+.mcard:hover { border-color:rgba(255,255,255,.22); transform:translateY(-2px); }
+.mcard input { position:absolute; opacity:0; pointer-events:none; }
+.mcard:has(input:checked) { border-color:var(--money); box-shadow:0 0 0 3px rgba(52,211,153,.16); }
+.mcard:has(input:focus-visible) { outline:2px solid var(--cyan); outline-offset:3px; }
+/* ფოტოებს თეთრი ფონი აქვთ ჩაშენებული — multiply-ით ის პანელის ფერს იღებს და აღარ ჩანს */
+.mcard-img { display:block; position:relative; aspect-ratio:4/3; overflow:hidden;
+  background:radial-gradient(circle at 50% 42%, #B4C0D6 0%, #7F8CA6 55%, #56617A 100%); }
+.mcard-img img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; mix-blend-mode:multiply; }
+.mcard-img.fit img { object-fit:contain; padding:10px; }
+.mcard-sale { position:absolute; z-index:2; top:9px; left:9px; padding:3px 9px; border-radius:999px;
+  font-size:12.5px; font-weight:800; color:#fff; background:#EF4444; box-shadow:0 4px 12px rgba(239,68,68,.4); }
+.mcard-tick { position:absolute; z-index:2; top:9px; right:9px; width:22px; height:22px; border-radius:50%;
+  display:grid; place-items:center; font-size:13px; font-weight:900; color:#04140D;
+  background:var(--money); opacity:0; transform:scale(.6); transition:opacity .15s, transform .15s; }
+.mcard:has(input:checked) .mcard-tick { opacity:1; transform:none; }
+.pay-note { display:flex; align-items:center; justify-content:center; gap:8px; margin-top:12px;
+  font-size:13px; color:var(--text-mid); text-align:center; }
+.pay-note .i { font-size:17px; color:var(--money); }
+.mcard-body { display:block; padding:11px 13px 13px; }
+.mcard-n { display:block; font-size:14px; font-weight:700; color:var(--text); }
+.mcard-price { display:flex; align-items:baseline; gap:9px; margin-top:3px; font-variant-numeric:tabular-nums; }
+.mcard-price b { font-size:21px; font-weight:900; color:var(--money); letter-spacing:-.02em; }
+.mcard-price s { font-size:14px; color:var(--text-mid); text-decoration:line-through;
+  text-decoration-color:#EF4444; text-decoration-thickness:2px; }
 
 /* ── მიმოხილვები ───────────────────────────────── */
 .rev { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:24px; }
@@ -379,7 +410,7 @@ input[type=range]::-moz-range-thumb {
 }
 .faq summary:hover { background:var(--surface); }
 .faq summary::-webkit-details-marker { display:none; }
-.faq summary::after { content:"+"; margin-right:auto; color:var(--text-dim); font-size:21px; font-weight:300; flex-shrink:0; }
+.faq summary::after { content:"+"; margin-left:auto; color:var(--text-dim); font-size:21px; font-weight:300; flex-shrink:0; }
 .faq details[open] summary::after { content:"−"; }
 .faq .ans { padding:0 22px 20px 22px; color:var(--text-mid); font-size:14.5px; }
 
@@ -387,12 +418,13 @@ input[type=range]::-moz-range-thumb {
 .contact-grid { display:grid; grid-template-columns:.85fr 1.15fr; gap:clamp(28px,4vw,56px); margin-top:44px; }
 .c-item { display:flex; gap:13px; padding:14px 0; border-top:1px solid var(--line-soft); font-size:14.5px; }
 .c-item:first-of-type { border-top:none; }
-.c-item .ico { font-size:18px; }
+.c-item { align-items:center; }
+.c-item .ico { font-size:19px; color:var(--text-dim); display:flex; }
 .c-item a { color:var(--cyan); }
 footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
 .foot-in { display:flex; flex-wrap:wrap; gap:22px; align-items:center; }
-.foot-in img { height:40px; }
-.foot-links { display:flex; gap:20px; margin-right:auto; flex-wrap:wrap; }
+.foot-in img { height:34px; width:auto; }
+.foot-links { display:flex; gap:20px; margin-left:auto; flex-wrap:wrap; }
 .foot-links a { font-size:14px; color:var(--text-mid); transition:color .16s; }
 .foot-links a:hover { color:var(--text); }
 .copy { font-size:13px; color:var(--text-dim); width:100%; padding-top:22px; border-top:1px solid var(--line-soft); }
@@ -407,12 +439,13 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
 
 /* ── მობილური ──────────────────────────────────── */
 @media (max-width:960px) {
-  .hero-grid, .calc, .sphere-cols, .steps-wrap, .mount-wrap, .contact-grid { grid-template-columns:1fr; }
+  .hero-grid, .calc, .sphere-cols, .steps-wrap, .mount-buy, .mount-more, .contact-grid { grid-template-columns:1fr; }
+  .mcards { max-width:520px; }
   .g3, .g4 { grid-template-columns:repeat(2,1fr); }
   .app-band { grid-template-columns:1fr; text-align:center; justify-items:center; }
   .app-band p { max-width:none; }
   .store-btns { flex-direction:row; flex-wrap:wrap; justify-content:center; }
-  .steps-img, .mount-img { order:-1; max-height:340px; }
+  .steps-img { order:-1; max-height:340px; }
   .nav-links { display:none; }
   .nav-burger { display:block; }
   .nav-links.open {
@@ -423,31 +456,58 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
 }
 @media (max-width:620px) {
   .g3, .g4, .g2, .two { grid-template-columns:1fr; }
-  .hero-stats { gap:22px; }
   .ph-input-row { flex-direction:column; }
   .hero { min-height:0; }
+  .hero-in { padding:30px 0 48px; }
+  .hero-badge { font-size:12px; margin-bottom:16px; }
+  .hero-sub { margin-top:16px; }
+  .hero-cta { margin-top:24px; }
+  .hero-cta .btn { flex:1 1 100%; }
+  .hero-stats { display:grid; grid-template-columns:repeat(3,auto); justify-content:space-between;
+    gap:12px; margin-top:28px; padding-top:20px; }
+  .hstat-v { font-size:20px; }
+  .hstat-l { font-size:11.5px; line-height:1.35; }
+  .nav-in { padding:10px 16px; gap:10px; }
+  .nav-cta { padding:9px 16px; font-size:13.5px; }
+  .inner { padding:0 16px; }
+  .inp, .multi-btn { font-size:16px; }
 }
 </style>
 </head>
 <body>
 <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=1046956205093078&ev=PageView&noscript=1"></noscript>
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 4.5-5"/></symbol>
+  <symbol id="i-ban" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m5.6 5.6 12.8 12.8"/></symbol>
+  <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 .9-1 1.7M12 17h.01"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></symbol>
+  <symbol id="i-hand" viewBox="0 0 24 24"><path d="M18 11V6a2 2 0 0 0-4 0v5"/><path d="M14 10V4a2 2 0 0 0-4 0v6"/><path d="M10 10.5V6a2 2 0 0 0-4 0v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></symbol>
+  <symbol id="i-chip" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+  <symbol id="i-cash" viewBox="0 0 24 24"><rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/><path d="M6 9.5v5M18 9.5v5"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+</svg>
+
 <div id="progress"></div>
 
 <nav>
   <div class="nav-in">
     <a href="#top" class="nav-brand">
-      <img src="assets/img-94564b98.webp" alt="Synexia">
+      <img src="assets/logo.webp" alt="Synexia" width="250" height="124">
     </a>
     <div class="nav-links" id="navLinks">
-      <a href="#calc">რამდენს გამოიმუშავებ</a>
+      <a href="#calc">ანაზღაურება</a>
       <a href="#phone">ტელეფონი</a>
       <a href="#who">ვის ვეძებთ</a>
       <a href="#how">როგორ მუშაობს</a>
       <a href="#app">აპლიკაცია</a>
       <a href="#faq">კითხვები</a>
     </div>
-    <button class="nav-burger" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="მენიუ">
+    <button class="nav-burger" id="navBurger" aria-label="მენიუ" aria-expanded="false" aria-controls="navLinks">
       <svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke-linecap="round"/></svg>
     </button>
     <button class="btn btn-primary nav-cta" onclick="goReg()">დარეგისტრირდი</button>
@@ -457,14 +517,14 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
 <!-- ── ჰირო ─────────────────────────────────────── -->
 <section class="hero" id="top">
   <div class="hero-bg">
-    <img src="assets/img-815c7820.webp" alt="კონტრიბუტორი მუშაობისას იწერს ვიდეოს" fetchpriority="high">
+    <img src="assets/img-815c7820.webp" alt="კონტრიბუტორი მუშაობისას იწერს ვიდეოს" width="1000" height="1788" fetchpriority="high">
   </div>
   <div class="hero-in">
     <div class="inner">
       <div class="hero-grid">
         <div>
           <div class="hero-badge">
-            <img src="assets/img-b0b22d02.png" alt="">
+            <img src="assets/img-b0b22d02.png" alt="" width="20" height="20">
             MicroAGI-ის ოფიციალური პარტნიორი საქართველოში
           </div>
           <h1>იმუშავე ერთხელ,<br><span class="grad">გამოიმუშავე ორჯერ</span></h1>
@@ -474,7 +534,7 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
           </p>
           <div class="hero-cta">
             <button class="btn btn-primary" onclick="goReg()">დარეგისტრირდი — უფასოდ</button>
-            <a href="#phone" class="btn btn-ghost">ჩემი ტელეფონი გვარგება?</a>
+            <a href="#phone" class="btn btn-ghost">ჩემი ტელეფონი გამოდგება?</a>
           </div>
           <div class="hero-stats">
             <div>
@@ -495,32 +555,34 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
         <div class="hero-card" id="reg">
           <h3>დარეგისტრირდი ახლავე</h3>
           <div class="note">Synexia-ს გუნდი დაგიკავშირდება 24 საათში</div>
-          <div class="field"><input class="inp" id="r-name" placeholder="სახელი და გვარი"></div>
-          <div class="field"><input class="inp" id="r-phone" placeholder="ტელეფონი (9 ციფრი)" inputmode="numeric"></div>
+          <form novalidate onsubmit="event.preventDefault();submitReg()">
+          <div class="field"><input class="inp" id="r-name" name="name" placeholder="სახელი და გვარი" aria-label="სახელი და გვარი" autocomplete="name"></div>
+          <div class="field"><input class="inp" id="r-phone" name="tel" type="tel" placeholder="ტელეფონი (9 ციფრი)" aria-label="ტელეფონი" inputmode="tel" autocomplete="tel-national" maxlength="20"></div>
           <div class="field multi" id="r-sphere-wrap">
-            <button type="button" class="multi-btn" id="r-sphere-btn" onclick="toggleSphere(event)">
+            <button type="button" class="multi-btn" id="r-sphere-btn" aria-expanded="false" onclick="toggleSphere(event)">
               <span id="r-sphere-label">— აირჩიეთ პროფესია / სფერო —</span>
             </button>
             <div class="multi-drop" id="r-sphere-drop"></div>
           </div>
-          <div class="field"><textarea class="inp" id="r-detail" placeholder="დეტალურად აღწერეთ თქვენი სამუშაო"></textarea></div>
+          <div class="field"><textarea class="inp" id="r-detail" placeholder="დეტალურად აღწერეთ თქვენი სამუშაო" aria-label="სამუშაოს აღწერა"></textarea></div>
           <div class="two">
             <div class="field">
-              <select class="inp" id="r-employment">
+              <select class="inp" id="r-employment" aria-label="დასაქმების სტატუსი">
                 <option value="">დასაქმების სტატუსი</option>
                 <option>დამსაქმებელი (კომპანიის მფლობელი)</option>
                 <option>დასაქმებული</option>
                 <option>თვითდასაქმებული / ფრილანსერი</option>
               </select>
             </div>
-            <div class="field"><select class="inp" id="r-city"></select></div>
+            <div class="field"><select class="inp" id="r-city" aria-label="ქალაქი"></select></div>
           </div>
           <div class="field">
-            <input class="inp" id="r-model" placeholder="ტელეფონის ბრენდი და მოდელი" oninput="regModelHint()">
+            <input class="inp" id="r-model" placeholder="ტელეფონის ბრენდი და მოდელი" aria-label="ტელეფონის ბრენდი და მოდელი" oninput="regModelHint()">
             <div class="calc-note" id="r-model-hint"></div>
           </div>
-          <button class="btn btn-primary" id="r-btn" style="width:100%;margin-top:6px" onclick="submitReg()">დარეგისტრირდი</button>
-          <div class="form-msg" id="r-msg"></div>
+          <button type="submit" class="btn btn-primary" id="r-btn" style="width:100%;margin-top:6px">დარეგისტრირდი</button>
+          <div class="form-msg" id="r-msg" role="status" aria-live="polite"></div>
+          </form>
         </div>
       </div>
     </div>
@@ -532,39 +594,33 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
   <div class="inner">
     <div class="rv">
       <span class="eyebrow">ანაზღაურება</span>
-      <h2 class="sec-title">რამდენს გამოიმუშავებ?</h2>
-      <p class="sec-lead">გადაატრიალე სლაიდერები და ნახე შენი ციფრი. ანაზღაურება მიღებულ საათებზეა — რამდენსაც ჩაწერ და მიიღება, იმდენი.</p>
+      <h2 class="sec-title">რამდენის გამომუშავება შეგიძლია?</h2>
+      <p class="sec-lead">გადაადგილე სლაიდერები და ნახე, მაქსიმუმ რამდენი შეიძლება გამოვიდეს. ანაზღაურება მხოლოდ მიღებულ საათებზეა — ანუ იმაზე, რაც ხარისხის შემოწმებას გაივლის.</p>
     </div>
     <div class="calc rv">
       <div class="card">
         <div class="slider-row">
           <div class="slider-top"><span class="lab">საათი დღეში</span><span class="val" id="calcHv">3</span></div>
-          <input type="range" id="calcH" min="1" max="8" step="1" value="3" oninput="calcUpdate()">
-        </div>
-        <div class="slider-row">
-          <div class="slider-top"><span class="lab">დღე კვირაში</span><span class="val" id="calcDv">5</span></div>
-          <input type="range" id="calcD" min="1" max="7" step="1" value="5" oninput="calcUpdate()">
+          <input type="range" id="calcH" min="1" max="8" step="1" value="3" oninput="calcUpdate();trackOnce('CalculatorUse')">
         </div>
         <div class="slider-row" style="margin-bottom:8px">
-          <div class="slider-top"><span class="lab">რამდენი ადამიანი</span><span class="val" id="calcPv">1</span></div>
-          <input type="range" id="calcP" min="1" max="20" step="1" value="1" oninput="calcUpdate()">
-          <div class="calc-note">კომპანია ხარ? ჩართე თანამშრომლები — თითოეული ცალკე ითვლება.</div>
+          <div class="slider-top"><span class="lab">დღე კვირაში</span><span class="val" id="calcDv">5</span></div>
+          <input type="range" id="calcD" min="1" max="7" step="1" value="5" oninput="calcUpdate();trackOnce('CalculatorUse')">
         </div>
       </div>
       <div class="card calc-out">
-        <div class="calc-amount" id="calcSum">1 500₾</div>
-        <div class="calc-period">თვეში, დაახლოებით</div>
+        <div class="calc-amount"><span id="calcSum">1 625₾</span><small>-მდე</small></div>
+        <div class="calc-period">თვეში — თუ ყველა ჩაწერილი საათი მიიღება</div>
         <div class="calc-split">
-          <div><div class="v" id="calcWeek">375₾</div><div class="l">კვირაში</div></div>
-          <div><div class="v" id="calcHours">60</div><div class="l">საათი თვეში</div></div>
-          <div><div class="v" id="calcYear">18 000₾</div><div class="l">წელიწადში</div></div>
+          <div><div class="v" id="calcWeek">375₾</div><div class="l">კვირაში, მაქსიმუმ</div></div>
+          <div><div class="v" id="calcHours">65</div><div class="l">საათი თვეში</div></div>
         </div>
+        <p class="calc-warn">რეალური თანხა შეიძლება ნაკლები იყოს: ყველა ჩაწერილი საათი არ მიიღება და ტარიფი სამუშაოზეა დამოკიდებული.</p>
       </div>
     </div>
     <p class="calc-note rv" style="margin-top:18px">
-      გაანგარიშება სავარაუდოა და ნაჩვენებია მაქსიმალური ტარიფით — 25₾ მიღებულ საათზე. ზუსტი თანხა
-      დამოკიდებულია იმაზე, რამდენი ჩაწერილი საათი გაივლის ხარისხის შემოწმებას და რა ტარიფი შეესაბამება შენს სამუშაოს. ერთ ადამიანს თვეში მაქსიმუმ
-      100 მიღებული საათი ეთვლება — ანუ 2 500₾.
+      ეს ჭერია და არა დაპირება. გაანგარიშება ნაჩვენებია მაქსიმალური ტარიფით — 25₾ მიღებულ საათზე. ერთ ადგილზე თვეში მაქსიმუმ
+      100 მიღებული საათი ითვლება — ანუ 2 500₾.
     </p>
   </div>
 </section>
@@ -583,11 +639,11 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
 
     <div class="ph-wrap rv">
       <div class="ph-input-row">
-        <input class="inp" id="phIn" placeholder="მაგალითად: Samsung Galaxy S23 ან აიფონი 13" oninput="phRun()">
-        <button class="btn btn-primary" onclick="phRun()">შემოწმება</button>
+        <input class="inp" id="phIn" placeholder="მაგალითად: Samsung Galaxy S23 ან აიფონი 13" aria-label="ტელეფონის მოდელი" oninput="phRun()">
+        <button type="button" class="btn btn-primary" onclick="phRun()">შემოწმება</button>
       </div>
 
-      <div class="ph-result" id="phRes">
+      <div class="ph-result" id="phRes" role="status" aria-live="polite">
         <div class="ph-icon" id="phIcon"></div>
         <div>
           <div class="ph-title" id="phTitle"></div>
@@ -596,7 +652,7 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
       </div>
 
       <details class="ph-list">
-        <summary>📱 ნახე სრული ჩამონათვალი</summary>
+        <summary><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg> ნახე სრული ჩამონათვალი</summary>
         <div class="ph-list-body">
           <div class="ph-row"><b>iPhone</b><span>11 და ზემოთ — ყველა ზომა (mini / Plus / Pro / Pro Max). საჭიროა iOS 17.4 ან უფრო ახალი.</span></div>
           <div class="ph-row"><b>Galaxy S</b><span>S20-დან S26-მდე — FE, Ultra, +, Edge, Slim და Active ვარიანტებიც.</span></div>
@@ -607,7 +663,7 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
           <div class="ph-row"><b>Google Pixel</b><span>7a და 7 Pro · 8, 8a, 8 Pro · 9, 9a, 9 Pro, 9 Pro XL · 10 და 10 Pro.</span></div>
           <div class="ph-row"><b>სხვა</b><span>Motorola Razr Ultra (2025) · OnePlus Open · Nothing Phone (2a) Plus · Infinix Hot 30i.</span></div>
           <div class="ph-no">
-            <b style="color:var(--text-mid)">ამ ეტაპზე არ გვარგება:</b>
+            <b style="color:var(--text-mid)">ამ ეტაპზე არ გამოდგება:</b>
             iPhone 8, X, XR, XS, SE და უფრო ძველი · Galaxy A-სერიის დანარჩენი მოდელები ·
             Xiaomi, Redmi, POCO · Honor · Huawei · realme · OPPO · vivo · Nokia · TECNO და სხვა ბრენდები.
             ეს სია იცვლება — თუ ახლა ვერ ხვდები, დარეგისტრირდი და ტელეფონის შეცვლისას შეგახსენებთ.
@@ -623,7 +679,7 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
   <div class="inner">
     <div class="rv">
       <span class="eyebrow">ვის ვეძებთ</span>
-      <h2 class="sec-title">ხელებით მუშაობ? მაშინ გველაპარაკები.</h2>
+      <h2 class="sec-title">ხელებით მუშაობ? მაშინ სწორედ შენ გეძებთ.</h2>
       <p class="sec-lead">
         მნიშვნელობა არ აქვს, სად მუშაობ — მნიშვნელოვანია, რომ ხელსაქმით ხარ დაკავებული.
         რაც უფრო ზუსტი და უნიკალური მოძრაობაა, მით უფრო ღირებულია მონაცემი.
@@ -631,7 +687,7 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
     </div>
     <div class="sphere-cols rv">
       <div class="sphere-box yes">
-        <h4>✅ გვარგება</h4>
+        <h4><svg class="i" aria-hidden="true"><use href="#i-check"/></svg> გამოდგება</h4>
         <div class="hint">ეს სფეროები ყველაზე მოთხოვნადია</div>
         <div class="chips">
           <span class="chip">დიასახლისის საქმე</span>
@@ -651,7 +707,7 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
         </div>
       </div>
       <div class="sphere-box">
-        <h4>⛔ ამ ეტაპზე არა</h4>
+        <h4><svg class="i" aria-hidden="true"><use href="#i-ban"/></svg> ამ ეტაპზე არა</h4>
         <div class="hint">მონაცემი რობოტისთვის არ გამოდგება</div>
         <div class="chips">
           <span class="chip">მძღოლობა · ტაქსი · კურიერი</span>
@@ -690,7 +746,7 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
           <div>
             <h4>დაიმაგრე ტელეფონი</h4>
             <p>სპეციალური სამაგრი თავზე — ხელები თავისუფალი რჩება და კადრი სტაბილურია.</p>
-            <span class="step-tag">სამაგარს ჩვენგან იღებ</span>
+            <span class="step-tag">სამაგრი 15₾-დან</span>
           </div>
         </div>
         <div class="step">
@@ -711,7 +767,7 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
         </div>
       </div>
       <div class="steps-img">
-        <img src="assets/img-d8223213.webp" alt="თავსამაგრით დამაგრებული ტელეფონი სამუშაოს იწერს" loading="lazy">
+        <img src="assets/img-d8223213.webp" alt="თავსამაგრით დამაგრებული ტელეფონი სამუშაოს იწერს" width="1000" height="1784" loading="lazy">
       </div>
     </div>
   </div>
@@ -721,7 +777,7 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
 <section id="app" class="sec-divider">
   <div class="inner">
     <div class="app-band rv">
-      <img class="app-icon" src="assets/img-ff73a07e.webp" alt="Shift" loading="lazy">
+      <img class="app-icon" src="assets/img-ff73a07e.webp" alt="Shift" width="88" height="88" loading="lazy">
       <div>
         <h3>Shift — ჩაწერის აპლიკაცია</h3>
         <p>
@@ -743,47 +799,56 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
   </div>
 </section>
 
-<!-- ── სამაგარი ─────────────────────────────────── -->
+<!-- ── სამაგრი ─────────────────────────────────── -->
 <section id="mount" class="sec-divider">
   <div class="inner">
-    <div class="mount-wrap">
-      <div class="mount-img rv">
-        <img src="assets/img-d8a2965b.webp" alt="სამაგარი ტელეფონისთვის" loading="lazy">
+    <div class="rv">
+      <span class="eyebrow">შეკვეთა</span>
+      <h2 class="sec-title">სამაგრი — ჩაწერის დასაწყებად</h2>
+    </div>
+    <form class="card mount-buy rv" novalidate onsubmit="event.preventDefault();submitMount()">
+      <div class="mcards" role="radiogroup" aria-label="აირჩიე სამაგრი">
+        <label class="mcard">
+          <input type="radio" name="m-model" id="m-std" value="standard" checked>
+          <span class="mcard-sale">−48%</span>
+          <span class="mcard-tick" aria-hidden="true">✓</span>
+          <span class="mcard-img"><img src="assets/img-d8a2965b.webp" alt="სტანდარტული სამაგრი" width="1000" height="765" loading="lazy"></span>
+          <span class="mcard-body">
+            <span class="mcard-n">სტანდარტული</span>
+            <span class="mcard-price"><b>15₾</b><s>29₾</s></span>
+          </span>
+        </label>
+        <label class="mcard">
+          <input type="radio" name="m-model" id="m-ula" value="ulanzi">
+          <span class="mcard-sale">−41%</span>
+          <span class="mcard-tick" aria-hidden="true">✓</span>
+          <span class="mcard-img fit"><img src="assets/mount-ulanzi-shift.webp" alt="Ulanzi-ს სამაგრი ტელეფონის დამჭერით" width="1024" height="1024" loading="lazy"></span>
+          <span class="mcard-body">
+            <span class="mcard-n">Ulanzi</span>
+            <span class="mcard-price"><b>29₾</b><s>49₾</s></span>
+          </span>
+        </label>
       </div>
-      <div class="rv">
-        <span class="eyebrow">აღჭურვილობა</span>
-        <h2 class="sec-title">სამაგარი — ჩაწერის დასაწყებად</h2>
-        <p class="sec-lead">
-          სამაგარი ტელეფონს თავზე იჭერს. ხელები თავისუფალია, კადრი არ ირხევა
-          და ჩაწერილი საათი ბევრად უფრო ხშირად გადის შემოწმებას.
-        </p>
-        <ul class="mount-list">
-          <li>ყველა დაშვებული მოდელისთვის გამოდგება</li>
-          <li>წონა თითქმის არ იგრძნობა — მთელი დღე გაძლებს</li>
-          <li>შეკვეთის შემდეგ ოპერატორი დაგიკავშირდება და მიწოდებას შეათანხმებს</li>
-        </ul>
-        <div class="card">
-          <div class="mopts" role="radiogroup" aria-label="აირჩიე სამაგარი">
-            <label class="mopt">
-              <input type="radio" name="m-model" value="standard" checked>
-              <span class="mopt-n">სტანდარტული სამაგარი</span>
-              <span class="mopt-p">29₾</span>
-            </label>
-            <label class="mopt">
-              <input type="radio" name="m-model" value="ulanzi">
-              <span class="mopt-n">Ulanzi</span>
-              <span class="mopt-p">49₾</span>
-            </label>
-          </div>
-          <div class="two">
-            <div class="field"><input class="inp" id="m-name" placeholder="სახელი და გვარი"></div>
-            <div class="field"><input class="inp" id="m-phone" placeholder="ტელეფონი (9 ციფრი)" inputmode="numeric"></div>
-          </div>
-          <div class="field"><input class="inp" id="m-city" placeholder="ქალაქი და მისამართი"></div>
-          <button class="btn btn-primary" id="m-btn" style="width:100%" onclick="submitMount()">შემიკვეთე სამაგარი</button>
-          <div class="form-msg" id="m-msg"></div>
-        </div>
+      <div>
+        <div class="field"><input class="inp" id="m-name" name="name" placeholder="სახელი და გვარი" aria-label="სახელი და გვარი" autocomplete="name"></div>
+        <div class="field"><input class="inp" id="m-phone" name="tel" type="tel" placeholder="ტელეფონი (9 ციფრი)" aria-label="ტელეფონი" inputmode="tel" autocomplete="tel-national" maxlength="20"></div>
+        <div class="field"><input class="inp" id="m-city" name="city" placeholder="ქალაქი / სოფელი" aria-label="ქალაქი ან სოფელი" autocomplete="address-level2"></div>
+        <div class="field"><input class="inp" id="m-street" name="address" placeholder="ქუჩა, სახლი, ბინა" aria-label="ქუჩა, სახლი, ბინა" autocomplete="street-address"></div>
+        <button type="submit" class="btn btn-primary" id="m-btn" style="width:100%">შემიკვეთე სამაგრი</button>
+        <p class="pay-note"><svg class="i" aria-hidden="true"><use href="#i-cash"/></svg>გადახდა კურიერთან, მიტანისას. წინასწარ არაფერს იხდი.</p>
+        <div class="form-msg" id="m-msg" role="status" aria-live="polite"></div>
       </div>
+    </form>
+    <div class="mount-more rv">
+      <p class="sec-lead">
+        სამაგრი ტელეფონს თავზე იჭერს. ხელები თავისუფალია, კადრი არ ირხევა
+        და ჩაწერილი საათი ბევრად უფრო ხშირად გადის შემოწმებას.
+      </p>
+      <ul class="mount-list">
+        <li>ყველა დაშვებული მოდელისთვის გამოდგება</li>
+        <li>წონა თითქმის არ იგრძნობა — მთელი დღე გაძლებს</li>
+        <li>შეკვეთის შემდეგ ოპერატორი დაგიკავშირდება და მიწოდებას შეათანხმებს</li>
+      </ul>
     </div>
   </div>
 </section>
@@ -798,17 +863,17 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
     </div>
     <div class="grid g3 rv">
       <div class="tile">
-        <div class="ico">🤲</div>
+        <div class="ico"><svg class="i" aria-hidden="true"><use href="#i-hand"/></svg></div>
         <h4>იწერება ხელები, არა სახე</h4>
         <p>კამერა შენი ხედვის კუთხიდან იღებს — ჩანს ის, რასაც ხელები აკეთებენ, არა შენ.</p>
       </div>
       <div class="tile">
-        <div class="ico">🔬</div>
+        <div class="ico"><svg class="i" aria-hidden="true"><use href="#i-chip"/></svg></div>
         <h4>გამოიყენება კვლევაში</h4>
         <p>მონაცემი მიდის MicroAGI-სთან სამრეწველო და სამედიცინო რობოტიკის AI მოდელების სავარჯიშოდ.</p>
       </div>
       <div class="tile">
-        <div class="ico">📄</div>
+        <div class="ico"><svg class="i" aria-hidden="true"><use href="#i-doc"/></svg></div>
         <h4>ყველაფერი ხელშეკრულებით</h4>
         <p>გადახდის პირობები, ტარიფი და მონაცემების გამოყენება წერილობით ფიქსირდება.</p>
       </div>
@@ -853,7 +918,7 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
     <div class="faq rv">
       <details>
         <summary>რეგისტრაცია ფასიანია?</summary>
-        <div class="ans">არა. რეგისტრაცია და აპლიკაცია უფასოა. არანაირი შენატანი ან წინასწარი გადახდა არ არის.</div>
+        <div class="ans">არა. რეგისტრაცია და აპლიკაცია უფასოა. არანაირი შენატანი ან წინასწარი გადახდა არ არის. ცალკე მხოლოდ სამაგრი იყიდება — 15₾-დან.</div>
       </details>
       <details>
         <summary>როდის მივიღებ ანაზღაურებას?</summary>
@@ -873,7 +938,7 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
       </details>
       <details>
         <summary>კომპანია ვარ — თანამშრომლებს როგორ ჩავრთავ?</summary>
-        <div class="ans">შესაძლებელია და წახალისებულია. ყოველი თანამშრომელი ცალკე ითვლება. დარეგისტრირდი და მიუთითე, რომ კომპანიის მფლობელი ხარ — გუნდი ცალკე გეგმას შეგითანხმებს.</div>
+        <div class="ans">შესაძლებელია, თუმცა ერთ ადგილზე თვეში მაქსიმუმ 100 მიღებული საათი ითვლება — ანუ 2 500₾, რამდენი ადამიანიც არ უნდა იწერდეს. დარეგისტრირდი და მიუთითე, რომ კომპანიის მფლობელი ხარ — ოპერატორი გეტყვის, რამდენი ადამიანის ჩართვა ღირს.</div>
       </details>
     </div>
   </div>
@@ -888,45 +953,45 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
     </div>
     <div class="contact-grid">
       <div class="rv">
-        <div class="c-item"><span class="ico">✉️</span><a href="mailto:info@synexia-geo.com">info@synexia-geo.com</a></div>
-        <div class="c-item"><span class="ico">📍</span><span>116 აკაკი წერეთლის გამზ., თბილისი 0119</span></div>
-        <div class="c-item"><span class="ico">🌐</span><a href="https://microagi.ai" target="_blank" rel="noopener">microagi.ai</a></div>
-        <div class="c-item"><span class="ico">💬</span><a href="https://www.facebook.com/synexiageo" target="_blank" rel="noopener">ფეისბუქის გვერდი — სწრაფი პასუხი</a></div>
+        <div class="c-item"><span class="ico"><svg class="i" aria-hidden="true"><use href="#i-mail"/></svg></span><a href="mailto:info@synexia-geo.com">info@synexia-geo.com</a></div>
+        <div class="c-item"><span class="ico"><svg class="i" aria-hidden="true"><use href="#i-pin"/></svg></span><span>116 აკაკი წერეთლის გამზ., თბილისი 0119</span></div>
+        <div class="c-item"><span class="ico"><svg class="i" aria-hidden="true"><use href="#i-globe"/></svg></span><a href="https://microagi.ai" target="_blank" rel="noopener">microagi.ai</a></div>
+        <div class="c-item"><span class="ico"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg></span><a href="https://www.facebook.com/synexiageo" target="_blank" rel="noopener">ფეისბუქის გვერდი — სწრაფი პასუხი</a></div>
       </div>
-      <div class="card rv">
+      <form class="card rv" novalidate onsubmit="event.preventDefault();submitContact()">
         <div class="two">
-          <div class="field"><input class="inp" id="c-name" placeholder="სახელი და გვარი"></div>
-          <div class="field"><input class="inp" id="c-phone" placeholder="ტელეფონი (9 ციფრი)" inputmode="numeric"></div>
+          <div class="field"><input class="inp" id="c-name" name="name" placeholder="სახელი და გვარი" aria-label="სახელი და გვარი" autocomplete="name"></div>
+          <div class="field"><input class="inp" id="c-phone" name="tel" type="tel" placeholder="ტელეფონი (9 ციფრი)" aria-label="ტელეფონი" inputmode="tel" autocomplete="tel-national" maxlength="20"></div>
         </div>
         <div class="field multi" id="c-sphere-wrap">
-          <button type="button" class="multi-btn" id="c-sphere-btn" onclick="toggleSphere(event,'c')">
+          <button type="button" class="multi-btn" id="c-sphere-btn" aria-expanded="false" onclick="toggleSphere(event,'c')">
             <span id="c-sphere-label">— აირჩიეთ პროფესია / სფერო —</span>
           </button>
           <div class="multi-drop" id="c-sphere-drop"></div>
         </div>
-        <div class="field"><textarea class="inp" id="c-detail" placeholder="დეტალურად აღწერეთ თქვენი სამუშაო"></textarea></div>
+        <div class="field"><textarea class="inp" id="c-detail" placeholder="დეტალურად აღწერეთ თქვენი სამუშაო" aria-label="სამუშაოს აღწერა"></textarea></div>
         <div class="two">
           <div class="field">
-            <select class="inp" id="c-employment">
+            <select class="inp" id="c-employment" aria-label="დასაქმების სტატუსი">
               <option value="">დასაქმების სტატუსი</option>
               <option>დამსაქმებელი (კომპანიის მფლობელი)</option>
               <option>დასაქმებული</option>
               <option>თვითდასაქმებული / ფრილანსერი</option>
             </select>
           </div>
-          <div class="field"><select class="inp" id="c-city"></select></div>
+          <div class="field"><select class="inp" id="c-city" aria-label="ქალაქი"></select></div>
         </div>
-        <div class="field"><input class="inp" id="c-model" placeholder="ტელეფონის ბრენდი და მოდელი"></div>
-        <button class="btn btn-primary" id="c-btn" style="width:100%" onclick="submitContact()">გაგზავნა</button>
-        <div class="form-msg" id="c-msg"></div>
-      </div>
+        <div class="field"><input class="inp" id="c-model" placeholder="ტელეფონის ბრენდი და მოდელი" aria-label="ტელეფონის ბრენდი და მოდელი"></div>
+        <button type="submit" class="btn btn-primary" id="c-btn" style="width:100%">გაგზავნა</button>
+        <div class="form-msg" id="c-msg" role="status" aria-live="polite"></div>
+      </form>
     </div>
   </div>
 </section>
 
 <footer>
   <div class="inner foot-in">
-    <img src="assets/img-94564b98.webp" alt="Synexia">
+    <img src="assets/logo.webp" alt="Synexia" width="250" height="124" loading="lazy">
     <div class="foot-links">
       <a href="#calc">ანაზღაურება</a>
       <a href="#phone">ტელეფონები</a>
@@ -969,8 +1034,10 @@ function buildLists() {
 }
 function toggleSphere(e, p = 'r') {
   e.stopPropagation();
-  document.getElementById(p + '-sphere-drop').classList.toggle('open');
-  document.getElementById(p + '-sphere-btn').classList.toggle('open');
+  const open = document.getElementById(p + '-sphere-drop').classList.toggle('open');
+  const btn = document.getElementById(p + '-sphere-btn');
+  btn.classList.toggle('open', open);
+  btn.setAttribute('aria-expanded', open);
 }
 function sphereChange(p) {
   const picked = [...document.querySelectorAll('.' + p + '-sph:checked')].map(c => c.value);
@@ -984,6 +1051,7 @@ document.addEventListener('click', e => {
     if (!document.getElementById(p + '-sphere-wrap')?.contains(e.target)) {
       document.getElementById(p + '-sphere-drop')?.classList.remove('open');
       document.getElementById(p + '-sphere-btn')?.classList.remove('open');
+      document.getElementById(p + '-sphere-btn')?.setAttribute('aria-expanded', 'false');
     }
   });
 });
@@ -991,31 +1059,28 @@ document.addEventListener('click', e => {
 // ── კალკულატორი ─────────────────────────────────
 // კვირა → თვე: 52/12 ≈ 4.33, თორემ „4 კვირა" თვეში ორ დღეს კარგავს
 const WEEKS_PER_MONTH = 52 / 12;
-const MAX_HOURS_PER_PERSON = 100;   // თვეში, ერთ ადამიანზე — 100 × 25₾ = 2 500₾
+const MAX_HOURS_PER_PERSON = 100;   // თვეში, ერთ ადგილზე (ლოკაციაზე) — 100 × 25₾ = 2 500₾
 const fmt = n => Math.round(n).toLocaleString('ka-GE').replace(/,/g, ' ');
 function calcUpdate() {
   const h = +document.getElementById('calcH').value;
   const d = +document.getElementById('calcD').value;
-  const p = +document.getElementById('calcP').value;
   document.getElementById('calcHv').textContent = h;
   document.getElementById('calcDv').textContent = d;
-  document.getElementById('calcPv').textContent = p;
-  // ერთ ადამიანს თვეში მაქსიმუმ 100 მიღებული საათი ეთვლება — ანუ 2 500₾.
+  // ერთ ადგილზე თვეში მაქსიმუმ 100 მიღებული საათი ითვლება — ანუ 2 500₾.
   // ჭერის გარეშე სლაიდერი ისეთ თანხას აჩვენებდა, რასაც ვერ გავცემდით.
   const perPerson  = Math.min(h * d * WEEKS_PER_MONTH, MAX_HOURS_PER_PERSON);
-  const hoursMonth = perPerson * p;
+  const hoursMonth = perPerson;
   document.getElementById('calcSum').textContent   = fmt(hoursMonth * RATE) + '₾';
   document.getElementById('calcWeek').textContent  = fmt((hoursMonth / WEEKS_PER_MONTH) * RATE) + '₾';
   document.getElementById('calcHours').textContent = fmt(hoursMonth);
-  document.getElementById('calcYear').textContent  = fmt(hoursMonth * RATE * 12) + '₾';
 }
 
 // ── ტელეფონის შემოწმება ─────────────────────────
 // ვერდიქტი იგივეა, რაც CRM-ში — assets/phone-filter.js
 const PH_MSG = {
-  ok:    ['✅','გვარგება!','ეს მოდელი სტანდარტს აკმაყოფილებს. დარეგისტრირდი და ოპერატორი დაგიკავშირდება.'],
-  maybe: ['🤔','ზუსტად ვერ ვცნობთ','მოდელი ბოლომდე არ იკითხება. დარეგისტრირდი — ოპერატორი ზარზე დააზუსტებს. უარი არ არის.'],
-  no:    ['⛔','ამ ეტაპზე არ გვარგება','ამ მოდელის კამერა ჩვენს სტანდარტს ვერ აკმაყოფილებს. მაინც დარეგისტრირდი — სია ფართოვდება და ტელეფონის შეცვლისას შეგახსენებთ.']
+  ok:    ['check','გამოდგება!','ეს მოდელი სტანდარტს აკმაყოფილებს. დარეგისტრირდი და ოპერატორი დაგიკავშირდება.'],
+  maybe: ['help','ზუსტად ვერ ვცნობთ','მოდელი ბოლომდე არ იკითხება. დარეგისტრირდი — ოპერატორი ზარზე დააზუსტებს. უარი არ არის.'],
+  no:    ['ban','ამ ეტაპზე არ გამოდგება','ამ მოდელის კამერა ჩვენს სტანდარტს ვერ აკმაყოფილებს. მაინც დარეგისტრირდი — სია ფართოვდება და ტელეფონის შეცვლისას შეგახსენებთ.']
 };
 function phVerdict(v) { return v === true ? 'ok' : v === false ? 'no' : 'maybe'; }
 function phRun() {
@@ -1025,9 +1090,21 @@ function phRun() {
   const k = phVerdict(window.phCheck(raw));
   const [icon, title, text] = PH_MSG[k];
   box.className = 'ph-result show ' + k;
-  document.getElementById('phIcon').textContent  = icon;
+  document.getElementById('phIcon').innerHTML = `<svg class="i" aria-hidden="true"><use href="#i-${icon}"/></svg>`;
   document.getElementById('phTitle').textContent = title;
   document.getElementById('phText').textContent  = text;
+  // Pixel-ს მხოლოდ ვერდიქტი ეგზავნება (ok / maybe / no), მოდელის ტექსტი არა.
+  // აკრეფისას ყოველ ასოზე არ ვაგზავნით — 1.5 წამი პაუზის შემდეგ, თითო ვერდიქტი ერთხელ.
+  clearTimeout(phRun.t);
+  phRun.t = setTimeout(() => trackOnce('PhoneCheck', { result: k }), 1500);
+}
+// Meta Pixel-ის დამხმარე მოვლენები: ერთ გვერდის ნახვაზე თითო მხოლოდ ერთხელ
+const tracked = new Set();
+function trackOnce(name, params) {
+  const key = name + JSON.stringify(params || {});
+  if (tracked.has(key)) return;
+  tracked.add(key);
+  try { if (window.fbq) fbq('trackCustom', name, params || {}); } catch (e) {}
 }
 // რეგისტრაციის ფორმაში იგივე მინიშნება, ოღონდ ჩუმად — შენახვას არ ვუშლით
 function regModelHint() {
@@ -1035,9 +1112,9 @@ function regModelHint() {
   const hint = document.getElementById('r-model-hint');
   if (!raw) { hint.textContent = ''; return; }
   const k = phVerdict(window.phCheck(raw));
-  hint.textContent = k === 'ok' ? '✅ ეს მოდელი გვარგება'
-                   : k === 'no' ? '⛔ ეს მოდელი ამ ეტაპზე არ გვარგება — დარეგისტრირდი მაინც'
-                   : '🤔 მოდელს ვერ ვცნობთ — ოპერატორი დააზუსტებს';
+  hint.textContent = k === 'ok' ? '✓ ეს მოდელი გამოდგება'
+                   : k === 'no' ? 'ეს მოდელი ამ ეტაპზე არ გამოდგება — დარეგისტრირდი მაინც'
+                   : 'მოდელს ვერ ვცნობთ — ოპერატორი დააზუსტებს';
   hint.style.color = k === 'ok' ? 'var(--money)' : k === 'no' ? 'var(--bad)' : 'var(--warn)';
 }
 
@@ -1047,16 +1124,34 @@ function genId(prefix) {
 }
 async function sbInsert(table, data) {
   if (!data.id && table === 'leads') data.id = genId('WEB');
-  const res = await fetch(`${SB_URL}/rest/v1/${table}`, {
-    method: 'POST',
-    headers: {
-      'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY,
-      'Content-Type': 'application/json', 'Prefer': 'return=minimal'
-    },
-    body: JSON.stringify(data)
-  });
-  if (!res.ok) throw new Error(await res.text());
+  // 15 წამზე მეტს არ ველოდებით — ცუდ ინტერნეტზე ღილაკი „იგზავნება..."-ზე არ უნდა გაიყინოს
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), 15000);
+  try {
+    const res = await fetch(`${SB_URL}/rest/v1/${table}`, {
+      method: 'POST',
+      headers: {
+        'apikey': SB_KEY, 'Authorization': 'Bearer ' + SB_KEY,
+        'Content-Type': 'application/json', 'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(data),
+      signal: ctl.signal
+    });
+    if (!res.ok) {
+      const err = new Error(await res.text());
+      err.status = res.status;
+      throw err;
+    }
+  } finally { clearTimeout(timer); }
 }
+// „+995 599 12 34 56", „0 599..." და „599123456" ერთი და იგივე ნომერია
+function phoneDigits(raw) {
+  let d = String(raw).replace(/\D/g, '');
+  if (d.length === 12 && d.startsWith('995')) d = d.slice(3);
+  if (d.length === 10 && d.startsWith('0')) d = d.slice(1);
+  return d;
+}
+const SEND_FAIL = 'ვერ გაიგზავნა. შეამოწმეთ ინტერნეტი და სცადეთ თავიდან, ან მოგვწერეთ: info@synexia-geo.com';
 async function submitToHubSpot(firstname, phone, extra) {
   try {
     await fetch('https://rad-bublanina-6786ba.netlify.app/.netlify/functions/hubspot-lead', {
@@ -1118,7 +1213,7 @@ async function submitLead(p) {
   const model   = document.getElementById(p + '-model').value.trim();
   const msg     = document.getElementById(p + '-msg');
   const btn     = document.getElementById(p + '-btn');
-  const digits  = phone.replace(/\D/g, '');
+  const digits  = phoneDigits(phone);
 
   if (!name)             { setMsg(msg, 'სახელი სავალდებულოა', false); markBad([p+'-name']); return; }
   if (digits.length !== 9) { setMsg(msg, 'ტელეფონი უნდა შეიცავდეს 9 ციფრს', false); markBad([p+'-phone']); return; }
@@ -1136,29 +1231,43 @@ async function submitLead(p) {
     model && `მობილური: ${model}`
   ].filter(Boolean).join(' | ');
 
-  // წყარო დამატებითია — თუ მის გამო ჩაწერა ჩავარდა, ლიდი მის გარეშე მაინც ჩაიწეროს
+  // წყარო დამატებითია — თუ მის გამო ჩაწერა ჩავარდა, ლიდი მის გარეშე მაინც ჩაიწეროს.
+  // ტელეფონი ისევ ისე ინახება, როგორც აკრიფეს; მხოლოდ +995/0 თავსართი იჭრება.
   const lead = {
-    name, phone, status: 'New Lead',
+    name, phone: digits === phone.replace(/\D/g, '') ? phone : digits, status: 'New Lead',
     reg_date: new Date().toISOString().split('T')[0],
     city: city || null, note,
     source: attributionText()
   };
+  // „მიღებულია"-ს მხოლოდ მაშინ ვწერთ, როცა ლიდი ბაზაში ნამდვილად ჩაიწერა. ადრე
+  // წარმატება მაშინვე ჩნდებოდა და ფორმა იწმინდებოდა — ჩაწერა თუ ჩავარდებოდა,
+  // ადამიანი ფიქრობდა, რომ დარეგისტრირდა, ჩვენ კი ვერაფერს ვხედავდით.
+  let saved = false;
+  try { await sbInsert('leads', lead); saved = true; }
+  catch (e) {
+    try { delete lead.source; await sbInsert('leads', lead); saved = true; }
+    // 409 = იგივე id უკვე დევს: პირველი მცდელობა ჩაიწერა, პასუხი კი გზაში დაიკარგა
+    catch (e2) { saved = e2.status === 409; }
+  }
+  // HubSpot სათადარიგო ასლია — ბაზა რომც ჩავარდეს, ნომერი იქ მაინც რჩება
+  submitToHubSpot(name, phone, { sphere: spheres.join(', '), city, phone_model: model });
+
+  if (!saved) {
+    setMsg(msg, SEND_FAIL, false);
+    btn.disabled = false; btn.textContent = p === 'r' ? 'დარეგისტრირდი' : 'გაგზავნა';
+    return;
+  }
   // Lead ფეისბუქს მხოლოდ მაშინ ეგზავნება, როცა ლიდი ბაზაში ნამდვილად ჩაიწერა —
   // თორემ ის არასწორ ხალხს ისწავლის. eventID = ლიდის id (sbInsert ავსებს),
   // რომ სერვერიდან მოსულ იგივე მოვლენასთან არ გაორმაგდეს.
-  sbInsert('leads', lead).catch(() => {
-    delete lead.source;
-    return sbInsert('leads', lead);
-  }).then(() => {
-    try { if (window.fbq) fbq('track', 'Lead', { content_name: p === 'r' ? 'registration' : 'contact' }, { eventID: lead.id }); } catch (e) {}
-  }).catch(() => {});
-  submitToHubSpot(name, phone, { sphere: spheres.join(', '), city, phone_model: model });
+  try { if (window.fbq) fbq('track', 'Lead', { content_name: p === 'r' ? 'registration' : 'contact' }, { eventID: lead.id }); } catch (e) {}
 
   setMsg(msg, '✓ რეგისტრაცია მიღებულია! ოპერატორი დაგიკავშირდებათ.', true);
   btn.textContent = '✓ გაგზავნილია';
   ['-name','-phone','-detail','-model'].forEach(s => document.getElementById(p + s).value = '');
   document.querySelectorAll('.' + p + '-sph:checked').forEach(c => c.checked = false);
   sphereChange(p);
+  if (p === 'r') regModelHint();
   setTimeout(() => { btn.disabled = false; btn.textContent = p === 'r' ? 'დარეგისტრირდი' : 'გაგზავნა'; }, 4000);
 }
 const submitReg     = () => submitLead('r');
@@ -1168,32 +1277,36 @@ const submitContact = () => submitLead('c');
 async function submitMount() {
   const name  = document.getElementById('m-name').value.trim();
   const phone = document.getElementById('m-phone').value.trim();
-  const addr  = document.getElementById('m-city').value.trim();
+  const city   = document.getElementById('m-city').value.trim();
+  const street = document.getElementById('m-street').value.trim();
+  // ბაზაში ერთი address სვეტია — „ქალაქი, ქუჩა სახლი ბინა"
+  const addr   = city + ', ' + street;
   const msg   = document.getElementById('m-msg');
   const btn   = document.getElementById('m-btn');
-  const digits = phone.replace(/\D/g, '');
+  const digits = phoneDigits(phone);
   // ფასი აქ ჩამოიწერება და ბაზაში შეკვეთასთან ერთად ინახება — ტარიფის
   // შეცვლის შემდეგ ძველ შეკვეთას ის ფასი უნდა შერჩეს, რომლითაც შეუკვეთეს.
-  const MOUNTS = { standard: 29, ulanzi: 49 };
+  const MOUNTS = { standard: 15, ulanzi: 29 };   // ფასდაკლებით; ჩვეულებრივი ფასი 29 და 49
   const picked = document.querySelector('input[name="m-model"]:checked');
   const model  = picked && MOUNTS[picked.value] ? picked.value : 'standard';
   if (!name)               { setMsg(msg, 'სახელი სავალდებულოა', false); markBad(['m-name']); return; }
   if (digits.length !== 9) { setMsg(msg, 'ტელეფონი უნდა შეიცავდეს 9 ციფრს', false); markBad(['m-phone']); return; }
-  if (!addr)               { setMsg(msg, 'მიუთითეთ ქალაქი და მისამართი', false); markBad(['m-city']); return; }
+  if (!city)               { setMsg(msg, 'მიუთითეთ ქალაქი ან სოფელი', false); markBad(['m-city']); return; }
+  if (street.length < 4)   { setMsg(msg, 'მიუთითეთ ზუსტი მისამართი: ქუჩა, სახლი, ბინა', false); markBad(['m-street']); return; }
 
   btn.disabled = true; btn.textContent = 'იგზავნება...';
   try {
     await sbInsert('mount_orders', { name, phone: '+995' + digits, address: addr, status: 'new',
                                      model, price: MOUNTS[model] });
-    setMsg(msg, '✓ შეკვეთა მიღებულია! ოპერატორი დაგიკავშირდებათ მიწოდების შესათანხმებლად.', true);
+    setMsg(msg, '✓ შეკვეთა მიღებულია! ოპერატორი დაგიკავშირდებათ მიწოდების შესათანხმებლად. გადახდა კურიერთან.', true);
     btn.textContent = '✓ გაგზავნილია';
-    ['m-name','m-phone','m-city'].forEach(id => document.getElementById(id).value = '');
+    ['m-name','m-phone','m-city','m-street'].forEach(id => document.getElementById(id).value = '');
   } catch (e) {
-    setMsg(msg, 'შეკვეთა ვერ გაიგზავნა. დაგვირეკეთ ან მოგვწერეთ: info@synexia-geo.com', false);
-    btn.disabled = false; btn.textContent = 'შემიკვეთე სამაგარი';
+    setMsg(msg, 'შეკვეთა ვერ გაიგზავნა. სცადეთ თავიდან ან მოგვწერეთ: info@synexia-geo.com', false);
+    btn.disabled = false; btn.textContent = 'შემიკვეთე სამაგრი';
     return;
   }
-  setTimeout(() => { btn.disabled = false; btn.textContent = 'შემიკვეთე სამაგარი'; }, 4000);
+  setTimeout(() => { btn.disabled = false; btn.textContent = 'შემიკვეთე სამაგრი'; }, 4000);
 }
 
 // ── კონტრიბუტორების ციფრი ───────────────────────
@@ -1219,9 +1332,32 @@ const io = new IntersectionObserver(es => {
   es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
 }, { threshold: .12 });
 document.querySelectorAll('.rv').forEach(el => io.observe(el));
-document.getElementById('navLinks').addEventListener('click', e => {
-  if (e.target.tagName === 'A') document.getElementById('navLinks').classList.remove('open');
-});
+const navLinks = document.getElementById('navLinks'), navBurger = document.getElementById('navBurger');
+function navToggle(open) {
+  navBurger.setAttribute('aria-expanded', navLinks.classList.toggle('open', open));
+}
+navBurger.addEventListener('click', () => navToggle());
+navLinks.addEventListener('click', e => { if (e.target.tagName === 'A') navToggle(false); });
+
+// ── სტრუქტურული მონაცემი საძიებო სისტემებისთვის ──
+// კითხვა-პასუხი გვერდიდანვე იკრიბება, რომ ტექსტი ორ ადგილას არ ვწეროთ
+(function () {
+  const faq = [...document.querySelectorAll('.faq details')].map(d => ({
+    '@type': 'Question', name: d.querySelector('summary').textContent.trim(),
+    acceptedAnswer: { '@type': 'Answer', text: d.querySelector('.ans').textContent.trim() }
+  }));
+  const ld = document.createElement('script');
+  ld.type = 'application/ld+json';
+  ld.textContent = JSON.stringify({ '@context': 'https://schema.org', '@graph': [
+    { '@type': 'Organization', name: 'Synexia', url: 'https://synexia.ge/',
+      logo: 'https://synexia.ge/assets/img-94564b98.png', email: 'info@synexia-geo.com',
+      sameAs: ['https://www.facebook.com/synexiageo'],
+      address: { '@type': 'PostalAddress', streetAddress: '116 აკაკი წერეთლის გამზ.',
+                 addressLocality: 'თბილისი', postalCode: '0119', addressCountry: 'GE' } },
+    { '@type': 'FAQPage', mainEntity: faq }
+  ] });
+  document.head.appendChild(ld);
+})();
 
 buildLists();
 calcUpdate();
