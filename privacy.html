@@ -7,17 +7,18 @@
 <meta name="description" content="როგორ ვაგროვებთ, ვიყენებთ და ვიცავთ თქვენს პერსონალურ მონაცემებს Synexia-ში.">
 <link rel="canonical" href="https://synexia.ge/privacy.html">
 <meta name="robots" content="index,follow">
-<meta name="theme-color" content="#08080B">
+<meta name="theme-color" content="#18150F">
 <link rel="icon" href="assets/img-94564b98.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:#08080B; --bg-soft:#0E0E14; --surface:#12121A; --surface-2:#181822;
-  --line:rgba(255,255,255,.09); --line-soft:rgba(255,255,255,.055);
-  --text:#F4F4F6; --text-mid:#A8A8B8; --text-dim:#6E6E82;
-  --blue:#3B82F6; --cyan:#22D3EE; --radius:18px; --max:820px;
+  /* იგივე ღია თემა, რაც მთავარ გვერდზე */
+  --bg:#F5F0E6; --bg-soft:#FAF7F1; --surface:#FFFFFF; --surface-2:#EFE8DB;
+  --line:rgba(30,24,14,.15); --line-soft:rgba(30,24,14,.09);
+  --text:#18150F; --text-mid:#575149; --text-dim:#8B8479; --ink:#18150F;
+  --blue:#4F46E5; --cyan:#4F46E5; --radius:18px; --max:820px;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
 body {
@@ -32,10 +33,10 @@ a:hover { text-decoration:underline; }
 
 .inner { max-width:var(--max); margin:0 auto; padding:0 22px; }
 
-header { border-bottom:1px solid var(--line-soft); padding:20px 0; }
+header { background:var(--ink); padding:16px 0; }
 header .inner { display:flex; align-items:center; gap:16px; }
 header img { height:34px; width:auto; }
-header a.back { margin-left:auto; font-size:14px; color:var(--text-mid); }
+header a.back { margin-left:auto; font-size:14px; color:rgba(255,255,255,.75); }
 
 .hero { padding:56px 0 28px; }
 .eyebrow {
@@ -69,10 +70,10 @@ th, td { text-align:left; padding:11px 12px; border-bottom:1px solid var(--line-
 th { color:var(--text); font-weight:700; font-size:13px; letter-spacing:.04em; text-transform:uppercase; }
 td { color:var(--text-mid); }
 
-footer { border-top:1px solid var(--line-soft); padding:34px 0 48px; }
+footer { background:var(--ink); padding:34px 0 48px; }
 footer .inner { display:flex; flex-wrap:wrap; gap:18px; align-items:center; }
 footer img { height:34px; width:auto; }
-.copy { font-size:13px; color:var(--text-dim); width:100%; padding-top:18px; border-top:1px solid var(--line-soft); }
+.copy { font-size:13px; color:rgba(255,255,255,.5); width:100%; padding-top:18px; border-top:1px solid rgba(255,255,255,.12); }
 @media (max-width:600px) {
   table, thead, tbody, tr, th, td { display:block; }
   th { border:0; padding-bottom:4px; }

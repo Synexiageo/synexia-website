@@ -134,10 +134,11 @@ nav {
   gap:clamp(24px,3vw,36px) clamp(32px,5vw,64px); align-items:start; }
 .hero-copy { grid-area:copy; }
 .hero-card { grid-area:card; }
-.hero-media { grid-area:media; position:relative; margin:0; border-radius:22px; overflow:hidden; border:1px solid var(--line); }
-.hero-media img { width:100%; aspect-ratio:1200/630; object-fit:cover; }
-.hero-media figcaption { position:absolute; left:12px; bottom:12px; padding:6px 13px; border-radius:999px;
-  font-size:13px; font-weight:600; color:#fff; background:rgba(24,21,15,.8); backdrop-filter:blur(8px); }
+.hero-media { grid-area:media; display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.hero-media figure { position:relative; margin:0; border-radius:18px; overflow:hidden; border:1px solid var(--line); }
+.hero-media img { width:100%; aspect-ratio:3/4; object-fit:cover; }
+.hero-media figcaption { position:absolute; left:8px; bottom:8px; padding:4px 10px; border-radius:999px;
+  font-size:12px; font-weight:600; color:#fff; background:rgba(24,21,15,.8); backdrop-filter:blur(8px); }
 .hero-badge {
   display:inline-flex; align-items:center; gap:9px; padding:7px 15px 7px 8px;
   border:1px solid var(--line); border-radius:999px; background:var(--surface);
@@ -394,7 +395,7 @@ input[type=range]::-moz-range-thumb {
 /* ── ციფრები ფოტოს ფონზე ──────────────────────── */
 .stats { padding:0; min-height:min(78vh,640px); display:flex; align-items:center; overflow:hidden; }
 .stats-bg { position:absolute; inset:0; }
-.stats-bg img { width:100%; height:100%; object-fit:cover; object-position:50% 80%; filter:blur(2px); transform:scale(1.05); }
+.stats-bg img { width:100%; height:100%; object-fit:cover; object-position:50% 45%; filter:blur(1.5px); transform:scale(1.04); }
 .stats-bg::after { content:""; position:absolute; inset:0;
   background:linear-gradient(90deg, rgba(10,10,12,.86) 0%, rgba(10,10,12,.58) 48%, rgba(10,10,12,.2) 100%); }
 .stats .inner { position:relative; width:100%; padding-top:clamp(56px,8vw,96px); padding-bottom:clamp(56px,8vw,96px); }
@@ -513,6 +514,7 @@ footer { background:var(--ink); padding:44px 0 56px; }
       <img src="assets/logo.webp" alt="Synexia" width="250" height="124">
     </a>
     <div class="nav-links" id="navLinks">
+      <a href="#mount">სამაგრი</a>
       <a href="#calc">ანაზღაურება</a>
       <a href="#phone">ტელეფონი</a>
       <a href="#who">ვის ვეძებთ</a>
@@ -594,11 +596,66 @@ footer { background:var(--ink); padding:44px 0 56px; }
           <div class="form-msg" id="r-msg" role="status" aria-live="polite"></div>
           </form>
         </div>
-        <figure class="hero-media">
-          <img src="assets/og.jpg" alt="კონტრიბუტორი თავსამაგრზე დამაგრებული ტელეფონით" width="1200" height="630">
-          <figcaption>ტელეფონი თავზე — ხელები თავისუფალია</figcaption>
-        </figure>
+        <div class="hero-media">
+          <figure><img src="assets/work-store.webp" alt="მაღაზიის თანამშრომელი თავსამაგრით თაროზე პროდუქტს ალაგებს" width="673" height="1100" style="object-position:35% 30%"><figcaption>ვაჭრობა</figcaption></figure>
+          <figure><img src="assets/work-build.webp" alt="მშენებელი თავსამაგრით თბოიზოლაციას ამაგრებს" width="653" height="1100" style="object-position:30% 22%"><figcaption>მშენებლობა</figcaption></figure>
+          <figure><img src="assets/work-plaster.webp" alt="ხელოსანი თავსამაგრით კედელს ლესავს" width="783" height="1100" style="object-position:72% 18%"><figcaption>რემონტი</figcaption></figure>
+        </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── სამაგრი ─────────────────────────────────── -->
+<section id="mount" class="sec-divider">
+  <div class="inner">
+    <div class="rv">
+      <span class="eyebrow">შეკვეთა</span>
+      <h2 class="sec-title">სამაგრი — ჩაწერის დასაწყებად</h2>
+    </div>
+    <form class="card mount-buy rv" novalidate onsubmit="event.preventDefault();submitMount()">
+      <div class="mcards" role="radiogroup" aria-label="აირჩიე სამაგრი">
+        <label class="mcard">
+          <input type="radio" name="m-model" id="m-std" value="standard" checked>
+          <span class="mcard-sale">−48%</span>
+          <span class="mcard-tick" aria-hidden="true">✓</span>
+          <span class="mcard-img"><img src="assets/img-d8a2965b.webp" alt="სტანდარტული სამაგრი" width="1000" height="765" loading="lazy"></span>
+          <span class="mcard-body">
+            <span class="mcard-n">სტანდარტული</span>
+            <span class="mcard-price"><b>15₾</b><s>29₾</s></span>
+          </span>
+        </label>
+        <label class="mcard">
+          <input type="radio" name="m-model" id="m-ula" value="ulanzi">
+          <span class="mcard-sale">−41%</span>
+          <span class="mcard-tick" aria-hidden="true">✓</span>
+          <span class="mcard-img fit"><img src="assets/mount-ulanzi-shift.webp" alt="Ulanzi-ს სამაგრი ტელეფონის დამჭერით" width="1024" height="1024" loading="lazy"></span>
+          <span class="mcard-body">
+            <span class="mcard-n">Ulanzi</span>
+            <span class="mcard-price"><b>29₾</b><s>49₾</s></span>
+          </span>
+        </label>
+      </div>
+      <div>
+        <div class="field"><input class="inp" id="m-name" name="name" placeholder="სახელი და გვარი" aria-label="სახელი და გვარი" autocomplete="name"></div>
+        <div class="field"><input class="inp" id="m-phone" name="tel" type="tel" placeholder="ტელეფონი (9 ციფრი)" aria-label="ტელეფონი" inputmode="tel" autocomplete="tel-national" maxlength="20"></div>
+        <div class="field"><input class="inp" id="m-city" name="city" placeholder="ქალაქი / სოფელი" aria-label="ქალაქი ან სოფელი" autocomplete="address-level2"></div>
+        <div class="field"><input class="inp" id="m-street" name="address" placeholder="ქუჩა, სახლი, ბინა" aria-label="ქუჩა, სახლი, ბინა" autocomplete="street-address"></div>
+        <button type="submit" class="btn btn-primary" id="m-btn" style="width:100%">შემიკვეთე სამაგრი</button>
+        <p class="pay-note"><svg class="i" aria-hidden="true"><use href="#i-cash"/></svg>გადახდა კურიერთან, მიტანისას. წინასწარ არაფერს იხდი.</p>
+        <div class="form-msg" id="m-msg" role="status" aria-live="polite"></div>
+      </div>
+    </form>
+    <div class="mount-more rv">
+      <p class="sec-lead">
+        სამაგრი ტელეფონს თავზე იჭერს. ხელები თავისუფალია, კადრი არ ირხევა
+        და ჩაწერილი საათი ბევრად უფრო ხშირად გადის შემოწმებას.
+      </p>
+      <ul class="mount-list">
+        <li>ყველა დაშვებული მოდელისთვის გამოდგება</li>
+        <li>წონა თითქმის არ იგრძნობა — მთელი დღე გაძლებს</li>
+        <li>შეკვეთის შემდეგ ოპერატორი დაგიკავშირდება და მიწოდებას შეათანხმებს</li>
+      </ul>
     </div>
   </div>
 </section>
@@ -781,7 +838,7 @@ footer { background:var(--ink); padding:44px 0 56px; }
         </div>
       </div>
       <div class="steps-img">
-        <img src="assets/img-d8223213.webp" alt="თავსამაგრით დამაგრებული ტელეფონი სამუშაოს იწერს" width="1000" height="1784" loading="lazy">
+        <img src="assets/work-wood.webp" alt="დურგალი თავსამაგრზე დამაგრებული ტელეფონით მუშაობს დაზგასთან" width="882" height="1100" loading="lazy">
       </div>
     </div>
   </div>
@@ -809,60 +866,6 @@ footer { background:var(--ink); padding:44px 0 56px; }
           <span>App Store<small>iPhone</small></span>
         </a>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── სამაგრი ─────────────────────────────────── -->
-<section id="mount" class="sec-divider">
-  <div class="inner">
-    <div class="rv">
-      <span class="eyebrow">შეკვეთა</span>
-      <h2 class="sec-title">სამაგრი — ჩაწერის დასაწყებად</h2>
-    </div>
-    <form class="card mount-buy rv" novalidate onsubmit="event.preventDefault();submitMount()">
-      <div class="mcards" role="radiogroup" aria-label="აირჩიე სამაგრი">
-        <label class="mcard">
-          <input type="radio" name="m-model" id="m-std" value="standard" checked>
-          <span class="mcard-sale">−48%</span>
-          <span class="mcard-tick" aria-hidden="true">✓</span>
-          <span class="mcard-img"><img src="assets/img-d8a2965b.webp" alt="სტანდარტული სამაგრი" width="1000" height="765" loading="lazy"></span>
-          <span class="mcard-body">
-            <span class="mcard-n">სტანდარტული</span>
-            <span class="mcard-price"><b>15₾</b><s>29₾</s></span>
-          </span>
-        </label>
-        <label class="mcard">
-          <input type="radio" name="m-model" id="m-ula" value="ulanzi">
-          <span class="mcard-sale">−41%</span>
-          <span class="mcard-tick" aria-hidden="true">✓</span>
-          <span class="mcard-img fit"><img src="assets/mount-ulanzi-shift.webp" alt="Ulanzi-ს სამაგრი ტელეფონის დამჭერით" width="1024" height="1024" loading="lazy"></span>
-          <span class="mcard-body">
-            <span class="mcard-n">Ulanzi</span>
-            <span class="mcard-price"><b>29₾</b><s>49₾</s></span>
-          </span>
-        </label>
-      </div>
-      <div>
-        <div class="field"><input class="inp" id="m-name" name="name" placeholder="სახელი და გვარი" aria-label="სახელი და გვარი" autocomplete="name"></div>
-        <div class="field"><input class="inp" id="m-phone" name="tel" type="tel" placeholder="ტელეფონი (9 ციფრი)" aria-label="ტელეფონი" inputmode="tel" autocomplete="tel-national" maxlength="20"></div>
-        <div class="field"><input class="inp" id="m-city" name="city" placeholder="ქალაქი / სოფელი" aria-label="ქალაქი ან სოფელი" autocomplete="address-level2"></div>
-        <div class="field"><input class="inp" id="m-street" name="address" placeholder="ქუჩა, სახლი, ბინა" aria-label="ქუჩა, სახლი, ბინა" autocomplete="street-address"></div>
-        <button type="submit" class="btn btn-primary" id="m-btn" style="width:100%">შემიკვეთე სამაგრი</button>
-        <p class="pay-note"><svg class="i" aria-hidden="true"><use href="#i-cash"/></svg>გადახდა კურიერთან, მიტანისას. წინასწარ არაფერს იხდი.</p>
-        <div class="form-msg" id="m-msg" role="status" aria-live="polite"></div>
-      </div>
-    </form>
-    <div class="mount-more rv">
-      <p class="sec-lead">
-        სამაგრი ტელეფონს თავზე იჭერს. ხელები თავისუფალია, კადრი არ ირხევა
-        და ჩაწერილი საათი ბევრად უფრო ხშირად გადის შემოწმებას.
-      </p>
-      <ul class="mount-list">
-        <li>ყველა დაშვებული მოდელისთვის გამოდგება</li>
-        <li>წონა თითქმის არ იგრძნობა — მთელი დღე გაძლებს</li>
-        <li>შეკვეთის შემდეგ ოპერატორი დაგიკავშირდება და მიწოდებას შეათანხმებს</li>
-      </ul>
     </div>
   </div>
 </section>
@@ -900,7 +903,7 @@ footer { background:var(--ink); padding:44px 0 56px; }
      ციფრი MicroAGI-ის დაშბორდიდანაა (იხ. #statPeople) — ხელით ახლდება. -->
 <section id="stats" class="stats">
   <div class="stats-bg">
-    <img src="assets/img-d8223213.webp" alt="" width="1000" height="1784" loading="lazy">
+    <img src="assets/work-tile.webp" alt="" width="721" height="1100" loading="lazy">
   </div>
   <div class="inner">
     <div class="stats-list">
