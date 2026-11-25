@@ -22,7 +22,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<!-- Meta Pixel — Dataset „Synexia Website". Lead-ს submitLead აგზავნის,
+<!-- Meta Pixel — Dataset „Synexia Website". Lead-ს submitReg აგზავნის,
      მხოლოდ ბაზაში წარმატებით ჩაწერის შემდეგ. სახელი/ტელეფონი არ იგზავნება. -->
 <script>
 !function(f,b,e,v,n,t,s)
@@ -179,6 +179,12 @@ h1 .grad {
 }
 .hero-card h3 { font-size:21px; font-weight:800; letter-spacing:-.01em; }
 .hero-card .note { font-size:13px; color:var(--text-dim); margin-top:5px; margin-bottom:20px; }
+.step-lbl { font-size:12.5px; font-weight:700; color:var(--text-mid); letter-spacing:.01em; margin:16px 0 9px; }
+.step-lbl:first-of-type { margin-top:0; }
+.hero-card .mcards { gap:10px; margin-bottom:4px; }
+.hero-card .mcard-img { aspect-ratio:16/10; }
+.hero-card .mcard-body { padding:8px 11px 10px; }
+.hero-card .mcard-price b { font-size:18px; }
 
 /* ── forms ─────────────────────────────────────── */
 .field { margin-bottom:12px; }
@@ -488,6 +494,7 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
   .hero-sub { margin-top:16px; }
   .hero-cta { margin-top:24px; }
   .hero-cta .btn { flex:1 1 100%; }
+  .btn { white-space:normal; text-align:center; line-height:1.35; }
   .hero-stats { display:grid; grid-template-columns:repeat(3,auto); justify-content:space-between;
     gap:12px; margin-top:28px; padding-top:20px; }
   .hstat-v { font-size:20px; }
@@ -559,7 +566,7 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
             <b>25₾-მდე მიიღე ყოველ მიღებულ საათზე</b> — ხელების მოძრაობა მომავლის რობოტებს ასწავლის.
           </p>
           <div class="hero-cta">
-            <button class="btn btn-primary" onclick="goReg()">დარეგისტრირდი — უფასოდ</button>
+            <button class="btn btn-primary" onclick="goReg()">დარეგისტრირდი და შეუკვეთე სამაგრი</button>
             <a href="#phone" class="btn btn-ghost">ჩემი ტელეფონი გამოდგება?</a>
           </div>
           <div class="hero-stats">
@@ -572,16 +579,40 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
               <div class="hstat-l">კონტრიბუტორი</div>
             </div>
             <div>
-              <div class="hstat-v">0₾</div>
-              <div class="hstat-l">რეგისტრაციის ღირებულება</div>
+              <div class="hstat-v">15₾-დან</div>
+              <div class="hstat-l">სამაგრი</div>
             </div>
           </div>
         </div>
 
         <div class="hero-card" id="reg">
-          <h3>დარეგისტრირდი ახლავე</h3>
-          <div class="note">Synexia-ს გუნდი დაგიკავშირდება 24 საათში</div>
+          <h3>დარეგისტრირდი და შეუკვეთე სამაგრი</h3>
+          <div class="note">ჩასაწერად სამაგრი გჭირდება — რეგისტრაცია და შეკვეთა ერთად ხდება</div>
           <form novalidate onsubmit="event.preventDefault();submitReg()">
+          <div class="step-lbl">1. აირჩიე სამაგრი</div>
+          <div class="mcards" role="radiogroup" aria-label="აირჩიე სამაგრი">
+            <label class="mcard">
+              <input type="radio" name="m-model" id="m-std" value="standard" checked onchange="regPrice()">
+              <span class="mcard-sale">−48%</span>
+              <span class="mcard-tick" aria-hidden="true">✓</span>
+              <span class="mcard-img"><img src="assets/img-d8a2965b.webp" alt="სტანდარტული სამაგრი" width="1000" height="765"></span>
+              <span class="mcard-body">
+                <span class="mcard-n">სტანდარტული</span>
+                <span class="mcard-price"><b>15₾</b><s>29₾</s></span>
+              </span>
+            </label>
+            <label class="mcard">
+              <input type="radio" name="m-model" id="m-ula" value="ulanzi" onchange="regPrice()">
+              <span class="mcard-sale">−41%</span>
+              <span class="mcard-tick" aria-hidden="true">✓</span>
+              <span class="mcard-img fit"><img src="assets/mount-ulanzi-shift.webp" alt="Ulanzi-ს სამაგრი ტელეფონის დამჭერით" width="1024" height="1024"></span>
+              <span class="mcard-body">
+                <span class="mcard-n">Ulanzi</span>
+                <span class="mcard-price"><b>29₾</b><s>49₾</s></span>
+              </span>
+            </label>
+          </div>
+          <div class="step-lbl">2. შენ შესახებ</div>
           <div class="field"><input class="inp" id="r-name" name="name" placeholder="სახელი და გვარი" aria-label="სახელი და გვარი" autocomplete="name"></div>
           <div class="field"><input class="inp" id="r-phone" name="tel" type="tel" placeholder="ტელეფონი (9 ციფრი)" aria-label="ტელეფონი" inputmode="tel" autocomplete="tel-national" maxlength="20"></div>
           <div class="field multi" id="r-sphere-wrap">
@@ -606,7 +637,10 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
             <input class="inp" id="r-model" placeholder="ტელეფონის ბრენდი და მოდელი" aria-label="ტელეფონის ბრენდი და მოდელი" oninput="regModelHint()">
             <div class="calc-note" id="r-model-hint"></div>
           </div>
-          <button type="submit" class="btn btn-primary" id="r-btn" style="width:100%;margin-top:6px">დარეგისტრირდი</button>
+          <div class="step-lbl">3. სად მოგიტანოთ სამაგრი</div>
+          <div class="field"><input class="inp" id="m-street" name="address" placeholder="ზუსტი მისამართი: ქუჩა, სახლი, ბინა (ან სოფელი)" aria-label="მიწოდების მისამართი" autocomplete="street-address"></div>
+          <button type="submit" class="btn btn-primary" id="r-btn" style="width:100%;margin-top:6px">დარეგისტრირდი და შეუკვეთე — 15₾</button>
+          <p class="pay-note"><svg class="i" aria-hidden="true"><use href="#i-cash"/></svg>გადახდა კურიერთან, მიტანისას. წინასწარ არაფერს იხდი.</p>
           <div class="form-msg" id="r-msg" role="status" aria-live="polite"></div>
           </form>
         </div>
@@ -624,52 +658,23 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
 <section id="mount" class="sec-divider">
   <div class="inner">
     <div class="rv">
-      <span class="eyebrow">შეკვეთა</span>
+      <span class="eyebrow">სამაგრი</span>
       <h2 class="sec-title">სამაგრი — ჩაწერის დასაწყებად</h2>
     </div>
-    <form class="card mount-buy rv" novalidate onsubmit="event.preventDefault();submitMount()">
-      <div class="mcards" role="radiogroup" aria-label="აირჩიე სამაგრი">
-        <label class="mcard">
-          <input type="radio" name="m-model" id="m-std" value="standard" checked>
-          <span class="mcard-sale">−48%</span>
-          <span class="mcard-tick" aria-hidden="true">✓</span>
-          <span class="mcard-img"><img src="assets/img-d8a2965b.webp" alt="სტანდარტული სამაგრი" width="1000" height="765" loading="lazy"></span>
-          <span class="mcard-body">
-            <span class="mcard-n">სტანდარტული</span>
-            <span class="mcard-price"><b>15₾</b><s>29₾</s></span>
-          </span>
-        </label>
-        <label class="mcard">
-          <input type="radio" name="m-model" id="m-ula" value="ulanzi">
-          <span class="mcard-sale">−41%</span>
-          <span class="mcard-tick" aria-hidden="true">✓</span>
-          <span class="mcard-img fit"><img src="assets/mount-ulanzi-shift.webp" alt="Ulanzi-ს სამაგრი ტელეფონის დამჭერით" width="1024" height="1024" loading="lazy"></span>
-          <span class="mcard-body">
-            <span class="mcard-n">Ulanzi</span>
-            <span class="mcard-price"><b>29₾</b><s>49₾</s></span>
-          </span>
-        </label>
-      </div>
-      <div>
-        <div class="field"><input class="inp" id="m-name" name="name" placeholder="სახელი და გვარი" aria-label="სახელი და გვარი" autocomplete="name"></div>
-        <div class="field"><input class="inp" id="m-phone" name="tel" type="tel" placeholder="ტელეფონი (9 ციფრი)" aria-label="ტელეფონი" inputmode="tel" autocomplete="tel-national" maxlength="20"></div>
-        <div class="field"><input class="inp" id="m-city" name="city" placeholder="ქალაქი / სოფელი" aria-label="ქალაქი ან სოფელი" autocomplete="address-level2"></div>
-        <div class="field"><input class="inp" id="m-street" name="address" placeholder="ქუჩა, სახლი, ბინა" aria-label="ქუჩა, სახლი, ბინა" autocomplete="street-address"></div>
-        <button type="submit" class="btn btn-primary" id="m-btn" style="width:100%">შემიკვეთე სამაგრი</button>
-        <p class="pay-note"><svg class="i" aria-hidden="true"><use href="#i-cash"/></svg>გადახდა კურიერთან, მიტანისას. წინასწარ არაფერს იხდი.</p>
-        <div class="form-msg" id="m-msg" role="status" aria-live="polite"></div>
-      </div>
-    </form>
     <div class="mount-more rv">
       <p class="sec-lead">
         სამაგრი ტელეფონს თავზე იჭერს. ხელები თავისუფალია, კადრი არ ირხევა
         და ჩაწერილი საათი ბევრად უფრო ხშირად გადის შემოწმებას.
       </p>
+      <div>
       <ul class="mount-list">
         <li>ყველა დაშვებული მოდელისთვის გამოდგება</li>
         <li>წონა თითქმის არ იგრძნობა — მთელი დღე გაძლებს</li>
         <li>შეკვეთის შემდეგ ოპერატორი დაგიკავშირდება და მიწოდებას შეათანხმებს</li>
+        <li>სამაგრს რეგისტრაციასთან ერთად უკვეთავ — 15₾-დან, გადახდა მიტანისას</li>
       </ul>
+      <button class="btn btn-primary" style="margin-top:14px" onclick="goReg()">დარეგისტრირდი და შეუკვეთე</button>
+      </div>
     </div>
   </div>
 </section>
@@ -970,7 +975,7 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
     <div class="faq rv">
       <details>
         <summary>რეგისტრაცია ფასიანია?</summary>
-        <div class="ans">არა. რეგისტრაცია და აპლიკაცია უფასოა. არანაირი შენატანი ან წინასწარი გადახდა არ არის. ცალკე მხოლოდ სამაგრი იყიდება — 15₾-დან.</div>
+        <div class="ans">რეგისტრაცია და აპლიკაცია უფასოა, წინასწარი შენატანი არ არის. ჩასაწერად კი სამაგრი გჭირდება: მას რეგისტრაციასთან ერთად უკვეთავ — 15₾-დან — და კურიერს მიტანისას უხდი.</div>
       </details>
       <details>
         <summary>როდის მივიღებ ანაზღაურებას?</summary>
@@ -1010,33 +1015,14 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
         <div class="c-item"><span class="ico"><svg class="i" aria-hidden="true"><use href="#i-globe"/></svg></span><a href="https://microagi.ai" target="_blank" rel="noopener">microagi.ai</a></div>
         <div class="c-item"><span class="ico"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg></span><a href="https://www.facebook.com/synexiageo" target="_blank" rel="noopener">ფეისბუქის გვერდი — სწრაფი პასუხი</a></div>
       </div>
-      <form class="card rv" novalidate onsubmit="event.preventDefault();submitContact()">
-        <div class="two">
-          <div class="field"><input class="inp" id="c-name" name="name" placeholder="სახელი და გვარი" aria-label="სახელი და გვარი" autocomplete="name"></div>
-          <div class="field"><input class="inp" id="c-phone" name="tel" type="tel" placeholder="ტელეფონი (9 ციფრი)" aria-label="ტელეფონი" inputmode="tel" autocomplete="tel-national" maxlength="20"></div>
-        </div>
-        <div class="field multi" id="c-sphere-wrap">
-          <button type="button" class="multi-btn" id="c-sphere-btn" aria-expanded="false" onclick="toggleSphere(event,'c')">
-            <span id="c-sphere-label">— აირჩიეთ პროფესია / სფერო —</span>
-          </button>
-          <div class="multi-drop" id="c-sphere-drop"></div>
-        </div>
-        <div class="field"><textarea class="inp" id="c-detail" placeholder="დეტალურად აღწერეთ თქვენი სამუშაო" aria-label="სამუშაოს აღწერა"></textarea></div>
-        <div class="two">
-          <div class="field">
-            <select class="inp" id="c-employment" aria-label="დასაქმების სტატუსი">
-              <option value="">დასაქმების სტატუსი</option>
-              <option>დამსაქმებელი (კომპანიის მფლობელი)</option>
-              <option>დასაქმებული</option>
-              <option>თვითდასაქმებული / ფრილანსერი</option>
-            </select>
-          </div>
-          <div class="field"><select class="inp" id="c-city" aria-label="ქალაქი"></select></div>
-        </div>
-        <div class="field"><input class="inp" id="c-model" placeholder="ტელეფონის ბრენდი და მოდელი" aria-label="ტელეფონის ბრენდი და მოდელი"></div>
-        <button type="submit" class="btn btn-primary" id="c-btn" style="width:100%">გაგზავნა</button>
-        <div class="form-msg" id="c-msg" role="status" aria-live="polite"></div>
-      </form>
+      <div class="card rv">
+        <h3 style="font-size:19px;font-weight:800">გინდა დაიწყო?</h3>
+        <p class="sec-lead" style="font-size:15px">
+          რეგისტრაცია და სამაგრის შეკვეთა ერთ ფორმაშია, გვერდის თავში. შეავსე და ოპერატორი
+          24 საათში დაგიკავშირდება — მიწოდებასაც მაშინ შეათანხმებს.
+        </p>
+        <button class="btn btn-primary" style="margin-top:18px;width:100%" onclick="goReg()">დარეგისტრირდი და შეუკვეთე სამაგრი</button>
+      </div>
     </div>
   </div>
 </section>
@@ -1076,7 +1062,7 @@ const RATE = 25;   // ₾ მიღებულ საათზე
 
 // ── სიების აწყობა ────────────────────────────────
 function buildLists() {
-  ['r','c'].forEach(p => {
+  ['r'].forEach(p => {
     document.getElementById(p + '-sphere-drop').innerHTML = SPHERES.map(s =>
       `<label><input type="checkbox" class="${p}-sph" value="${s}" onchange="sphereChange('${p}')"><span>${s}</span></label>`
     ).join('');
@@ -1099,7 +1085,7 @@ function sphereChange(p) {
   btn.classList.toggle('has-val', picked.length > 0);
 }
 document.addEventListener('click', e => {
-  ['r','c'].forEach(p => {
+  ['r'].forEach(p => {
     if (!document.getElementById(p + '-sphere-wrap')?.contains(e.target)) {
       document.getElementById(p + '-sphere-drop')?.classList.remove('open');
       document.getElementById(p + '-sphere-btn')?.classList.remove('open');
@@ -1254,111 +1240,115 @@ function attributionText() {
   return [src, a.camp, a.set, a.ad].filter(Boolean).join(' | ').slice(0, 300);
 }
 
-// ლიდის ჩაწერა — ველების სახელები და note-ის ფორმატი CRM-ს ზუსტად უნდა ემთხვეოდეს
-async function submitLead(p) {
-  const name    = document.getElementById(p + '-name').value.trim();
-  const phone   = document.getElementById(p + '-phone').value.trim();
-  const spheres = [...document.querySelectorAll('.' + p + '-sph:checked')].map(c => c.value);
-  const detail  = document.getElementById(p + '-detail').value.trim();
-  const empl    = document.getElementById(p + '-employment').value;
-  const city    = document.getElementById(p + '-city').value;
-  const model   = document.getElementById(p + '-model').value.trim();
-  const msg     = document.getElementById(p + '-msg');
-  const btn     = document.getElementById(p + '-btn');
+// რეგისტრაცია და სამაგრის შეკვეთა ერთი ფორმაა: ცალკე რეგისტრაცია აღარ არსებობს.
+// ჯერ ლიდი იწერება, მერე შეკვეთა იმავე ლიდის id-ით (mount_orders.lead_id).
+// ფასი აქ ჩამოიწერება და შეკვეთასთან ერთად ინახება — ტარიფის შეცვლის
+// შემდეგ ძველ შეკვეთას ის ფასი უნდა შერჩეს, რომლითაც შეუკვეთეს.
+const MOUNTS = { standard: 15, ulanzi: 29 };   // ფასდაკლებით; ჩვეულებრივი ფასი 29 და 49
+const REG_BTN = () => `დარეგისტრირდი და შეუკვეთე — ${MOUNTS[pickedMount()]}₾`;
+function pickedMount() {
+  const el = document.querySelector('input[name="m-model"]:checked');
+  return el && MOUNTS[el.value] ? el.value : 'standard';
+}
+function regPrice() { const b = document.getElementById('r-btn'); if (!b.disabled) b.textContent = REG_BTN(); }
+
+// ლიდი უკვე ჩაიწერა, შეკვეთა კი ჩავარდა — ხელახალ დაჭერაზე ლიდი მეორედ აღარ იწერება
+let REG_SAVED = null;   // { digits, id }
+
+async function insertOrder(order) {
+  try { await sbInsert('mount_orders', order); return true; }
+  catch (e) {
+    // lead_id სვეტი თუ ჯერ არ დამატებულა, შეკვეთა მის გარეშე მაინც ჩაიწეროს
+    if (!('lead_id' in order)) return false;
+    const { lead_id, ...rest } = order;
+    try { await sbInsert('mount_orders', rest); return true; } catch (e2) { return false; }
+  }
+}
+
+// ველების სახელები და note-ის ფორმატი CRM-ს ზუსტად უნდა ემთხვეოდეს.
+// მისამართი note-ში განზრახ არ იწერება: ავტო-ფილტრი note-ს კითხულობს
+// და ქუჩის სახელმა შეიძლება ლიდი უარყოს.
+async function submitReg() {
+  const p = 'r';
+  const name    = document.getElementById('r-name').value.trim();
+  const phone   = document.getElementById('r-phone').value.trim();
+  const spheres = [...document.querySelectorAll('.r-sph:checked')].map(c => c.value);
+  const detail  = document.getElementById('r-detail').value.trim();
+  const empl    = document.getElementById('r-employment').value;
+  const city    = document.getElementById('r-city').value;
+  const model   = document.getElementById('r-model').value.trim();
+  const street  = document.getElementById('m-street').value.trim();
+  const mount   = pickedMount();
+  const msg     = document.getElementById('r-msg');
+  const btn     = document.getElementById('r-btn');
   const digits  = phoneDigits(phone);
 
-  if (!name)             { setMsg(msg, 'სახელი სავალდებულოა', false); markBad([p+'-name']); return; }
-  if (digits.length !== 9) { setMsg(msg, 'ტელეფონი უნდა შეიცავდეს 9 ციფრს', false); markBad([p+'-phone']); return; }
-  if (!spheres.length)   { setMsg(msg, 'პროფესია / სფერო სავალდებულოა', false); markBad([p+'-sphere-btn']); return; }
-  if (!detail)           { setMsg(msg, 'გთხოვთ დეტალურად აღწეროთ სამუშაო', false); markBad([p+'-detail']); return; }
-  if (!empl)             { setMsg(msg, 'დასაქმების სტატუსი სავალდებულოა', false); markBad([p+'-employment']); return; }
-  if (!city)             { setMsg(msg, 'ქალაქი სავალდებულოა', false); markBad([p+'-city']); return; }
+  if (!name)             { setMsg(msg, 'სახელი სავალდებულოა', false); markBad(['r-name']); return; }
+  if (digits.length !== 9) { setMsg(msg, 'ტელეფონი უნდა შეიცავდეს 9 ციფრს', false); markBad(['r-phone']); return; }
+  if (!spheres.length)   { setMsg(msg, 'პროფესია / სფერო სავალდებულოა', false); markBad(['r-sphere-btn']); return; }
+  if (!detail)           { setMsg(msg, 'გთხოვთ დეტალურად აღწეროთ სამუშაო', false); markBad(['r-detail']); return; }
+  if (!empl)             { setMsg(msg, 'დასაქმების სტატუსი სავალდებულოა', false); markBad(['r-employment']); return; }
+  if (!city)             { setMsg(msg, 'ქალაქი სავალდებულოა', false); markBad(['r-city']); return; }
+  if (street.length < 4) { setMsg(msg, 'მიუთითეთ ზუსტი მისამართი, სადაც სამაგრი მოგიტანოთ', false); markBad(['m-street']); return; }
 
   btn.disabled = true; btn.textContent = 'იგზავნება...';
-  const note = [
-    `სფერო: ${spheres.join(', ')}`,
-    `სამუშაო: ${detail}`,
-    empl  && `დასაქმება: ${empl}`,
-    city  && `ქალაქი: ${city}`,
-    model && `მობილური: ${model}`
-  ].filter(Boolean).join(' | ');
+  const done = () => { btn.disabled = false; btn.textContent = REG_BTN(); };
 
-  // წყარო დამატებითია — თუ მის გამო ჩაწერა ჩავარდა, ლიდი მის გარეშე მაინც ჩაიწეროს.
-  // ტელეფონი ისევ ისე ინახება, როგორც აკრიფეს; მხოლოდ +995/0 თავსართი იჭრება.
-  const lead = {
-    name, phone: digits === phone.replace(/\D/g, '') ? phone : digits, status: 'New Lead',
-    reg_date: new Date().toISOString().split('T')[0],
-    city: city || null, note,
-    source: attributionText()
-  };
-  // „მიღებულია"-ს მხოლოდ მაშინ ვწერთ, როცა ლიდი ბაზაში ნამდვილად ჩაიწერა. ადრე
-  // წარმატება მაშინვე ჩნდებოდა და ფორმა იწმინდებოდა — ჩაწერა თუ ჩავარდებოდა,
-  // ადამიანი ფიქრობდა, რომ დარეგისტრირდა, ჩვენ კი ვერაფერს ვხედავდით.
-  let saved = false;
-  try { await sbInsert('leads', lead); saved = true; }
-  catch (e) {
-    try { delete lead.source; await sbInsert('leads', lead); saved = true; }
-    // 409 = იგივე id უკვე დევს: პირველი მცდელობა ჩაიწერა, პასუხი კი გზაში დაიკარგა
-    catch (e2) { saved = e2.status === 409; }
+  let leadId = REG_SAVED && REG_SAVED.digits === digits ? REG_SAVED.id : null;
+  if (!leadId) {
+    const note = [
+      `სფერო: ${spheres.join(', ')}`,
+      `სამუშაო: ${detail}`,
+      empl  && `დასაქმება: ${empl}`,
+      city  && `ქალაქი: ${city}`,
+      model && `მობილური: ${model}`
+    ].filter(Boolean).join(' | ');
+
+    // წყარო დამატებითია — თუ მის გამო ჩაწერა ჩავარდა, ლიდი მის გარეშე მაინც ჩაიწეროს.
+    // ტელეფონი ისევ ისე ინახება, როგორც აკრიფეს; მხოლოდ +995/0 თავსართი იჭრება.
+    const lead = {
+      name, phone: digits === phone.replace(/\D/g, '') ? phone : digits, status: 'New Lead',
+      reg_date: new Date().toISOString().split('T')[0],
+      city: city || null, note,
+      source: attributionText()
+    };
+    // „მიღებულია"-ს მხოლოდ მაშინ ვწერთ, როცა ლიდი ბაზაში ნამდვილად ჩაიწერა.
+    let saved = false;
+    try { await sbInsert('leads', lead); saved = true; }
+    catch (e) {
+      try { delete lead.source; await sbInsert('leads', lead); saved = true; }
+      // 409 = იგივე id უკვე დევს: პირველი მცდელობა ჩაიწერა, პასუხი კი გზაში დაიკარგა
+      catch (e2) { saved = e2.status === 409; }
+    }
+    // HubSpot სათადარიგო ასლია — ბაზა რომც ჩავარდეს, ნომერი იქ მაინც რჩება
+    submitToHubSpot(name, phone, { sphere: spheres.join(', '), city, phone_model: model });
+
+    if (!saved) { setMsg(msg, SEND_FAIL, false); done(); return; }
+    leadId = lead.id;
+    REG_SAVED = { digits, id: leadId };
+    // Lead ფეისბუქს მხოლოდ ბაზაში ჩაწერის შემდეგ ეგზავნება. eventID = ლიდის id,
+    // რომ სერვერიდან მოსულ იგივე მოვლენასთან არ გაორმაგდეს.
+    try { if (window.fbq) fbq('track', 'Lead', { content_name: 'registration' }, { eventID: leadId }); } catch (e) {}
   }
-  // HubSpot სათადარიგო ასლია — ბაზა რომც ჩავარდეს, ნომერი იქ მაინც რჩება
-  submitToHubSpot(name, phone, { sphere: spheres.join(', '), city, phone_model: model });
 
-  if (!saved) {
-    setMsg(msg, SEND_FAIL, false);
-    btn.disabled = false; btn.textContent = p === 'r' ? 'დარეგისტრირდი' : 'გაგზავნა';
-    return;
-  }
-  // Lead ფეისბუქს მხოლოდ მაშინ ეგზავნება, როცა ლიდი ბაზაში ნამდვილად ჩაიწერა —
-  // თორემ ის არასწორ ხალხს ისწავლის. eventID = ლიდის id (sbInsert ავსებს),
-  // რომ სერვერიდან მოსულ იგივე მოვლენასთან არ გაორმაგდეს.
-  try { if (window.fbq) fbq('track', 'Lead', { content_name: p === 'r' ? 'registration' : 'contact' }, { eventID: lead.id }); } catch (e) {}
-
-  setMsg(msg, '✓ რეგისტრაცია მიღებულია! ოპერატორი დაგიკავშირდებათ.', true);
-  btn.textContent = '✓ გაგზავნილია';
-  ['-name','-phone','-detail','-model'].forEach(s => document.getElementById(p + s).value = '');
-  document.querySelectorAll('.' + p + '-sph:checked').forEach(c => c.checked = false);
-  sphereChange(p);
-  if (p === 'r') regModelHint();
-  setTimeout(() => { btn.disabled = false; btn.textContent = p === 'r' ? 'დარეგისტრირდი' : 'გაგზავნა'; }, 4000);
-}
-const submitReg     = () => submitLead('r');
-const submitContact = () => submitLead('c');
-
-// სამაგრის შეკვეთა — ცალკე ცხრილი; თუ ჯერ არ არსებობს, ნომერს ვთხოვთ და არ ვკარგავთ
-async function submitMount() {
-  const name  = document.getElementById('m-name').value.trim();
-  const phone = document.getElementById('m-phone').value.trim();
-  const city   = document.getElementById('m-city').value.trim();
-  const street = document.getElementById('m-street').value.trim();
   // ბაზაში ერთი address სვეტია — „ქალაქი, ქუჩა სახლი ბინა"
-  const addr   = city + ', ' + street;
-  const msg   = document.getElementById('m-msg');
-  const btn   = document.getElementById('m-btn');
-  const digits = phoneDigits(phone);
-  // ფასი აქ ჩამოიწერება და ბაზაში შეკვეთასთან ერთად ინახება — ტარიფის
-  // შეცვლის შემდეგ ძველ შეკვეთას ის ფასი უნდა შერჩეს, რომლითაც შეუკვეთეს.
-  const MOUNTS = { standard: 15, ulanzi: 29 };   // ფასდაკლებით; ჩვეულებრივი ფასი 29 და 49
-  const picked = document.querySelector('input[name="m-model"]:checked');
-  const model  = picked && MOUNTS[picked.value] ? picked.value : 'standard';
-  if (!name)               { setMsg(msg, 'სახელი სავალდებულოა', false); markBad(['m-name']); return; }
-  if (digits.length !== 9) { setMsg(msg, 'ტელეფონი უნდა შეიცავდეს 9 ციფრს', false); markBad(['m-phone']); return; }
-  if (!city)               { setMsg(msg, 'მიუთითეთ ქალაქი ან სოფელი', false); markBad(['m-city']); return; }
-  if (street.length < 4)   { setMsg(msg, 'მიუთითეთ ზუსტი მისამართი: ქუჩა, სახლი, ბინა', false); markBad(['m-street']); return; }
-
-  btn.disabled = true; btn.textContent = 'იგზავნება...';
-  try {
-    await sbInsert('mount_orders', { name, phone: '+995' + digits, address: addr, status: 'new',
-                                     model, price: MOUNTS[model] });
-    setMsg(msg, '✓ შეკვეთა მიღებულია! ოპერატორი დაგიკავშირდებათ მიწოდების შესათანხმებლად. გადახდა კურიერთან.', true);
-    btn.textContent = '✓ გაგზავნილია';
-    ['m-name','m-phone','m-city','m-street'].forEach(id => document.getElementById(id).value = '');
-  } catch (e) {
-    setMsg(msg, 'შეკვეთა ვერ გაიგზავნა. სცადეთ თავიდან ან მოგვწერეთ: info@synexia-geo.com', false);
-    btn.disabled = false; btn.textContent = 'შემიკვეთე სამაგრი';
-    return;
+  const ordered = await insertOrder({
+    name, phone: '+995' + digits, address: city + ', ' + street, status: 'new',
+    model: mount, price: MOUNTS[mount], lead_id: leadId
+  });
+  if (!ordered) {
+    setMsg(msg, 'რეგისტრაცია მიღებულია, მაგრამ სამაგრის შეკვეთა ვერ ჩაიწერა. დააჭირეთ ღილაკს ხელახლა — რეგისტრაცია მეორედ არ გაიგზავნება.', false);
+    done(); return;
   }
-  setTimeout(() => { btn.disabled = false; btn.textContent = 'შემიკვეთე სამაგრი'; }, 4000);
+
+  REG_SAVED = null;
+  setMsg(msg, `✓ რეგისტრაცია და შეკვეთა მიღებულია! ოპერატორი დაგიკავშირდებათ და მიწოდებას შეგითანხმებთ. სამაგრის ფასს (${MOUNTS[mount]}₾) კურიერს უხდით.`, true);
+  btn.textContent = '✓ გაგზავნილია';
+  ['r-name','r-phone','r-detail','r-model','m-street'].forEach(id => document.getElementById(id).value = '');
+  document.querySelectorAll('.r-sph:checked').forEach(c => c.checked = false);
+  sphereChange(p);
+  regModelHint();
+  setTimeout(done, 4000);
 }
 
 // ── კონტრიბუტორების ციფრი ───────────────────────
