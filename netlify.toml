@@ -1,2 +1,6 @@
 [build]
   functions = "netlify/functions"
+
+# CRM-ის ეტაპები მეტას — 15 წუთში ერთხელ (იხ. netlify/functions/meta-crm-events.js)
+[functions."meta-crm-events"]
+  schedule = "*/15 * * * *"
