@@ -624,11 +624,11 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
           <div class="field"><textarea class="inp" id="r-detail" placeholder="დეტალურად აღწერეთ თქვენი სამუშაო" aria-label="სამუშაოს აღწერა"></textarea></div>
           <div class="two">
             <div class="field">
-              <select class="inp" id="r-employment" aria-label="დასაქმების სტატუსი">
-                <option value="">დასაქმების სტატუსი</option>
-                <option>დამსაქმებელი (კომპანიის მფლობელი)</option>
-                <option>დასაქმებული</option>
-                <option>თვითდასაქმებული / ფრილანსერი</option>
+              <select class="inp" id="r-employment" aria-label="სტატუსი">
+                <option value="">სტატუსი</option>
+                <option>ფიზიკური პირი</option>
+                <option>ინდ. / მცირე მეწარმე</option>
+                <option>შპს</option>
               </select>
             </div>
             <div class="field"><select class="inp" id="r-city" aria-label="ქალაქი"></select></div>
@@ -998,7 +998,7 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
       </details>
       <details>
         <summary>კომპანია ვარ — თანამშრომლებს როგორ ჩავრთავ?</summary>
-        <div class="ans">შესაძლებელია, თუმცა ერთ ადგილზე თვეში მაქსიმუმ 100 მიღებული საათი ითვლება — ანუ 2 500₾, რამდენი ადამიანიც არ უნდა იწერდეს. დარეგისტრირდი და მიუთითე, რომ კომპანიის მფლობელი ხარ — ოპერატორი გეტყვის, რამდენი ადამიანის ჩართვა ღირს.</div>
+        <div class="ans">შესაძლებელია, თუმცა ერთ ადგილზე თვეში მაქსიმუმ 100 მიღებული საათი ითვლება — ანუ 2 500₾, რამდენი ადამიანიც არ უნდა იწერდეს. დარეგისტრირდი, სტატუსად აირჩიე შპს ან ინდ. მეწარმე — ოპერატორი გეტყვის, რამდენი ადამიანის ჩართვა ღირს.</div>
       </details>
     </div>
   </div>
@@ -1391,7 +1391,7 @@ async function submitReg() {
   if (digits.length !== 9) { setMsg(msg, 'ტელეფონი უნდა შეიცავდეს 9 ციფრს', false); markBad(['r-phone']); return; }
   if (!spheres.length)   { setMsg(msg, 'პროფესია / სფერო სავალდებულოა', false); markBad(['r-sphere-btn']); return; }
   if (!detail)           { setMsg(msg, 'გთხოვთ დეტალურად აღწეროთ სამუშაო', false); markBad(['r-detail']); return; }
-  if (!empl)             { setMsg(msg, 'დასაქმების სტატუსი სავალდებულოა', false); markBad(['r-employment']); return; }
+  if (!empl)             { setMsg(msg, 'სტატუსი სავალდებულოა: ფიზიკური პირი, ინდ. / მცირე მეწარმე ან შპს', false); markBad(['r-employment']); return; }
   if (!city)             { setMsg(msg, 'ქალაქი სავალდებულოა', false); markBad(['r-city']); return; }
   if (!model)            { setMsg(msg, 'აირჩიეთ ტელეფონის ბრენდი და მოდელი', false); markBad([document.getElementById('r-brand').value ? 'r-model' : 'r-brand']); return; }
   if (street.length < 4) { setMsg(msg, 'მიუთითეთ ზუსტი მისამართი, სადაც სამაგრი მოგიტანოთ', false); markBad(['m-street']); return; }
