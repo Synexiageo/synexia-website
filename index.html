@@ -633,10 +633,12 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
             </div>
             <div class="field"><select class="inp" id="r-city" aria-label="ქალაქი"></select></div>
           </div>
-          <div class="field">
-            <input class="inp" id="r-model" placeholder="ტელეფონის ბრენდი და მოდელი" aria-label="ტელეფონის ბრენდი და მოდელი" oninput="regModelHint()">
-            <div class="calc-note" id="r-model-hint"></div>
+          <div class="two">
+            <div class="field"><select class="inp" id="r-brand" aria-label="ტელეფონის ბრენდი" onchange="brandChange()"></select></div>
+            <div class="field"><select class="inp" id="r-model" aria-label="ტელეფონის მოდელი" onchange="regModelHint()" disabled>
+              <option value="">ჯერ ბრენდი აირჩიე</option></select></div>
           </div>
+          <div class="calc-note" id="r-model-hint" style="margin:-4px 0 12px"></div>
           <div class="step-lbl">3. სად მოგიტანოთ სამაგრი</div>
           <div class="field"><input class="inp" id="m-street" name="address" placeholder="ზუსტი მისამართი: ქუჩა, სახლი, ბინა (ან სოფელი)" aria-label="მიწოდების მისამართი" autocomplete="street-address"></div>
           <button type="submit" class="btn btn-primary" id="r-btn" style="width:100%;margin-top:6px">დარეგისტრირდი და შეუკვეთე — 15₾</button>
@@ -752,6 +754,7 @@ footer { border-top:1px solid var(--line-soft); padding:44px 0 56px; }
           <div class="ph-row"><b>Galaxy Z</b><span>Flip3, Flip5, Flip6, Flip7 · Fold4, Fold5, Fold6, Fold7.</span></div>
           <div class="ph-row"><b>Google Pixel</b><span>7a და 7 Pro · 8, 8a, 8 Pro · 9, 9a, 9 Pro, 9 Pro XL · 10 და 10 Pro.</span></div>
           <div class="ph-row"><b>სხვა</b><span>Motorola Razr Ultra (2025) · OnePlus Open · Nothing Phone (2a) Plus · Infinix Hot 30i.</span></div>
+          <div class="ph-row"><b>დიასახლისი</b><span>სხვა სია მოქმედებს: iPhone 12–18 (16e/17e-ს გარდა) · Galaxy S21–S26 (FE-ს გარდა) · Pixel 6–10.</span></div>
           <div class="ph-no">
             <b style="color:var(--text-mid)">ამ ეტაპზე არ გამოდგება:</b>
             iPhone 8, X, XR, XS, SE და უფრო ძველი · Galaxy A-სერიის დანარჩენი მოდელები ·
@@ -1083,6 +1086,7 @@ function sphereChange(p) {
   const btn = document.getElementById(p + '-sphere-btn');
   lbl.textContent = picked.length ? picked.join(', ') : '— აირჩიეთ პროფესია / სფერო —';
   btn.classList.toggle('has-val', picked.length > 0);
+  if (p === 'r') regModelHint();
 }
 document.addEventListener('click', e => {
   ['r'].forEach(p => {
@@ -1145,14 +1149,114 @@ function trackOnce(name, params) {
   try { if (window.fbq) fbq('trackCustom', name, params || {}); } catch (e) {}
 }
 // რეგისტრაციის ფორმაში იგივე მინიშნება, ოღონდ ჩუმად — შენახვას არ ვუშლით
+// ── ტელეფონის არჩევა ─────────────────────────────
+// ორი სტანდარტი გვაქვს: shift (ყველა, დიასახლისის გარდა) და minute (დიასახლისი).
+// ყოველ მოდელს ორივე პასუხი უწერია: [ბაზაში ჩასაწერი სახელი, სიაში ჩანაწერი, shift, minute].
+// true = გამოდგება · false = არ გამოდგება · null = ოპერატორი დააზუსტებს.
+// shift-ის სია CRM-ის წესს მისდევს (assets/phone-filter.js) — ის შეიცვლება, აქაც შეცვალე.
+// minute: iPhone 12–18 (e-ს გარდა), Galaxy S21–S26 (FE-ს გარდა), Pixel 6–10.
+const IPH = (n, lbl, sh, mi) => ['iPhone ' + n, lbl || n, sh, mi];
+const SAM = (n, lbl, sh, mi) => ['Samsung Galaxy ' + n, lbl || n, sh, mi];
+const PIX = (n, lbl, sh, mi) => ['Google Pixel ' + n, lbl || n, sh, mi];
+const PHONES = {
+  iphone: ['iPhone', [
+    IPH('18', '18 · Air · Pro · Pro Max', true, true),
+    IPH('17', '17 · Air · Pro · Pro Max', true, true),
+    IPH('17e', null, true, false),
+    IPH('16', '16 · Plus · Pro · Pro Max', true, true),
+    IPH('16e', null, true, false),
+    IPH('15', '15 · Plus · Pro · Pro Max', true, true),
+    IPH('14', '14 · Plus · Pro · Pro Max', true, true),
+    IPH('13', '13 · mini · Pro · Pro Max', true, true),
+    IPH('12', '12 · mini · Pro · Pro Max', true, true),
+    IPH('11', '11 · Pro · Pro Max', true, false),
+    IPH('SE', 'SE (ნებისმიერი)', false, false),
+    IPH('X', 'X · XR · XS · 8 და უფრო ძველი', false, false),
+  ]],
+  samsung: ['Samsung Galaxy', [
+    SAM('S26', 'S26 · S26+ · S26 Ultra', true, true),
+    SAM('S25', 'S25 · S25+ · S25 Ultra · S25 Edge', true, true),
+    SAM('S25 FE', null, true, false),
+    SAM('S24', 'S24 · S24+ · S24 Ultra', true, true),
+    SAM('S24 FE', null, true, false),
+    SAM('S23', 'S23 · S23+ · S23 Ultra', true, true),
+    SAM('S23 FE', null, true, false),
+    SAM('S22', 'S22 · S22+ · S22 Ultra', true, true),
+    SAM('S21', 'S21 · S21+ · S21 Ultra', true, true),
+    SAM('S21 FE', null, true, false),
+    SAM('S20', 'S20 · S20+ · S20 Ultra · S20 FE', true, false),
+    SAM('Note 20', 'Note 20 · Note 20 Ultra', true, false),
+    SAM('A57', null, true, false), SAM('A56', null, true, false), SAM('A55', null, true, false),
+    SAM('A54', null, true, false), SAM('A53', null, true, false), SAM('A52', null, true, false),
+    SAM('A51', null, true, false), SAM('A72', null, true, false),
+    SAM('A სხვა მოდელი', 'A-სერიის სხვა მოდელი (A05, A15, A25, A35…)', false, false),
+    SAM('M31', 'M31 · M31s', true, false),
+    ...['Flip7', 'Flip6', 'Flip5', 'Flip3', 'Fold7', 'Fold6', 'Fold5', 'Fold4'].map(m => SAM('Z ' + m, null, true, false)),
+    SAM('Z სხვა მოდელი', 'Z Flip / Fold — სხვა მოდელი', false, false),
+    SAM('სხვა მოდელი', 'სხვა Galaxy (M, J, Note 10 და ძველი…)', false, false),
+  ]],
+  pixel: ['Google Pixel', [
+    PIX('10', '10 · 10 Pro', true, true),
+    PIX('9', '9 · 9a · 9 Pro · 9 Pro XL', true, true),
+    PIX('8', '8 · 8a · 8 Pro', true, true),
+    PIX('7 Pro', null, true, true),
+    PIX('7a', null, true, true),
+    PIX('7', null, false, true),
+    PIX('6', '6 · 6a · 6 Pro', false, true),
+    PIX('5', '5 და უფრო ძველი', false, false),
+  ]],
+  xiaomi:   ['Xiaomi / Redmi / POCO', [['Xiaomi', 'ნებისმიერი მოდელი', false, false]]],
+  honor:    ['Honor',  [['Honor', 'ნებისმიერი მოდელი', false, false]]],
+  huawei:   ['Huawei', [['Huawei', 'ნებისმიერი მოდელი', false, false]]],
+  motorola: ['Motorola', [['Motorola Razr Ultra 2025', 'Razr Ultra (2025)', true, false],
+                          ['Motorola', 'სხვა მოდელი', false, false]]],
+  oneplus:  ['OnePlus', [['OnePlus Open', 'Open', true, false], ['OnePlus', 'სხვა მოდელი', false, false]]],
+  nothing:  ['Nothing', [['Nothing Phone 2a Plus', 'Phone (2a) Plus', true, false], ['Nothing', 'სხვა მოდელი', false, false]]],
+  infinix:  ['Infinix', [['Infinix Hot 30i', 'Hot 30i', true, false], ['Infinix', 'სხვა მოდელი', false, false]]],
+  other:    ['სხვა ბრენდი', [['realme', 'realme', false, false], ['OPPO', 'OPPO', false, false],
+             ['vivo', 'vivo', false, false], ['TECNO', 'TECNO', false, false], ['Nokia', 'Nokia', false, false],
+             ['სხვა ბრენდი', 'სხვა', false, false]]],
+};
+// სადაც ბრენდში ვარგისი მოდელებიც არის, ბოლო ვარიანტია „მოდელი არ ვიცი" — ოპერატორი დააზუსტებს.
+// დანარჩენ ბრენდებში თითქმის არაფერი გამოდგება, ამიტომ იქ ეს ვარიანტი არ არის.
+['iphone', 'samsung', 'pixel'].forEach(k =>
+  PHONES[k][1].push([PHONES[k][0] + ' (მოდელი არ ვიცი)', 'მოდელი არ ვიცი', null, null]));
+
+function buildPhones() {
+  document.getElementById('r-brand').innerHTML = '<option value="">ტელეფონის ბრენდი</option>' +
+    Object.entries(PHONES).map(([k, [b]]) => `<option value="${k}">${b}</option>`).join('');
+}
+function brandChange() {
+  const k = document.getElementById('r-brand').value, sel = document.getElementById('r-model');
+  const list = PHONES[k] ? PHONES[k][1] : [];
+  sel.disabled = !list.length;
+  sel.innerHTML = list.length
+    ? (list.length > 2 ? '<option value="">მოდელი</option>' : '') +
+      list.map(([v, l]) => `<option value="${v}">${l}</option>`).join('')
+    : '<option value="">ჯერ ბრენდი აირჩიე</option>';
+  regModelHint();
+}
+// მხოლოდ დიასახლისი → minute-ის სტანდარტი; დიასახლისი სხვა საქმესთან ერთად → რომელიმე გამოდგება
+function phoneVerdict() {
+  const k = document.getElementById('r-brand').value, v = document.getElementById('r-model').value;
+  const row = PHONES[k] && PHONES[k][1].find(r => r[0] === v);
+  if (!row) return { k: '', home: false };
+  const sph = [...document.querySelectorAll('.r-sph:checked')].map(c => c.value);
+  const home = sph.includes('დიასახლისი'), only = home && sph.length === 1;
+  const [, , sh, mi] = row;
+  const res = only ? mi : home ? (sh || mi ? true : (sh === null || mi === null ? null : false)) : sh;
+  return { k: phVerdict(res), home: only };
+}
 function regModelHint() {
-  const raw = document.getElementById('r-model').value.trim();
   const hint = document.getElementById('r-model-hint');
-  if (!raw) { hint.textContent = ''; return; }
-  const k = phVerdict(window.phCheck(raw));
-  hint.textContent = k === 'ok' ? '✓ ეს მოდელი გამოდგება'
-                   : k === 'no' ? 'ეს მოდელი ამ ეტაპზე არ გამოდგება — დარეგისტრირდი მაინც'
-                   : 'მოდელს ვერ ვცნობთ — ოპერატორი დააზუსტებს';
+  const { k, home } = phoneVerdict();
+  if (!k) { hint.textContent = ''; return; }
+  hint.textContent =
+      k === 'ok' ? '✓ ეს ტელეფონი გამოდგება'
+    : k === 'no' ? (home
+        ? '✗ ეს ტელეფონი დიასახლისისთვის არ გამოდგება. საჭიროა: iPhone 12–18 (e-ს გარდა), Galaxy S21–S26 (FE-ს გარდა) ან Pixel 6–10.'
+        : '✗ ეს ტელეფონი ამ ეტაპზე არ გამოდგება. ვარგისი მოდელების სია — „ჩემი ტელეფონი გამოდგება?“ განყოფილებაში.')
+    : 'ოპერატორი ზარისას დააზუსტებს, გამოდგება თუ არა';
   hint.style.color = k === 'ok' ? 'var(--money)' : k === 'no' ? 'var(--bad)' : 'var(--warn)';
 }
 
@@ -1276,7 +1380,7 @@ async function submitReg() {
   const detail  = document.getElementById('r-detail').value.trim();
   const empl    = document.getElementById('r-employment').value;
   const city    = document.getElementById('r-city').value;
-  const model   = document.getElementById('r-model').value.trim();
+  const model   = document.getElementById('r-model').value;
   const street  = document.getElementById('m-street').value.trim();
   const mount   = pickedMount();
   const msg     = document.getElementById('r-msg');
@@ -1289,6 +1393,7 @@ async function submitReg() {
   if (!detail)           { setMsg(msg, 'გთხოვთ დეტალურად აღწეროთ სამუშაო', false); markBad(['r-detail']); return; }
   if (!empl)             { setMsg(msg, 'დასაქმების სტატუსი სავალდებულოა', false); markBad(['r-employment']); return; }
   if (!city)             { setMsg(msg, 'ქალაქი სავალდებულოა', false); markBad(['r-city']); return; }
+  if (!model)            { setMsg(msg, 'აირჩიეთ ტელეფონის ბრენდი და მოდელი', false); markBad([document.getElementById('r-brand').value ? 'r-model' : 'r-brand']); return; }
   if (street.length < 4) { setMsg(msg, 'მიუთითეთ ზუსტი მისამართი, სადაც სამაგრი მოგიტანოთ', false); markBad(['m-street']); return; }
 
   btn.disabled = true; btn.textContent = 'იგზავნება...';
@@ -1344,7 +1449,8 @@ async function submitReg() {
   REG_SAVED = null;
   setMsg(msg, `✓ რეგისტრაცია და შეკვეთა მიღებულია! ოპერატორი დაგიკავშირდებათ და მიწოდებას შეგითანხმებთ. სამაგრის ფასს (${MOUNTS[mount]}₾) კურიერს უხდით.`, true);
   btn.textContent = '✓ გაგზავნილია';
-  ['r-name','r-phone','r-detail','r-model','m-street'].forEach(id => document.getElementById(id).value = '');
+  ['r-name','r-phone','r-detail','r-brand','m-street'].forEach(id => document.getElementById(id).value = '');
+  brandChange();
   document.querySelectorAll('.r-sph:checked').forEach(c => c.checked = false);
   sphereChange(p);
   regModelHint();
@@ -1421,6 +1527,7 @@ navLinks.addEventListener('click', e => { if (e.target.tagName === 'A') navToggl
 })();
 
 buildLists();
+buildPhones();
 calcUpdate();
 loadStats();
 </script>
