@@ -15,6 +15,7 @@ const SB_URL = "https://tsfzuyujfcacultjexsy.supabase.co";
 const GRAPH = `https://graph.facebook.com/${process.env.FB_GRAPH_VERSION || "v27.0"}`;
 const BATCH = 200;           // მეტა 1000-მდე იღებს, მაგრამ ერთი ცუდი მოვლენა მთელ პაკეტს აგდებს
 const MAX_AGE = 7 * 86400;   // მეტა 7 დღეზე ძველ მოვლენას არ იღებს
+const LEAD_WINDOW = 28 * 86400;  // ეტაპი ლიდიდან 28 დღის შემდეგ მეტასთვის უსარგებლოა
 
 async function sb(path, init = {}) {
   const k = process.env.SUPABASE_SERVICE_KEY;
@@ -61,14 +62,26 @@ exports.handler = async () => {
     console.log("meta-crm-events: ENV ჯერ არ არის — არაფერს ვაგზავნი");
     return { statusCode: 200, body: "not configured" };
   }
-  let sent = 0, failed = 0, stale = 0;
+  let sent = 0, failed = 0, stale = 0, skipped = 0;
   for (let round = 0; round < 10; round++) {
     const r = await sb(`meta_crm_events?select=id,lead_id,event_name,event_time&sent_at=is.null&error=is.null&order=id&limit=${BATCH}`,
                        { headers: { Prefer: "" } });
-    const rows = await r.json();
+    let rows = await r.json();
     if (!rows.length) break;
 
+    // ძველი ლიდის ეტაპი მეტას არ სჭირდება: ის მხოლოდ ლიდიდან 28 დღეში მომხდარ ეტაპს
+    // ითვლის, 90 დღეზე ძველ ლიდს კი საერთოდ აღარ იცნობს („Invalid Lead ID") და
+    // ასეთი ერთი მოვლენა მთელ პაკეტს აგდებს.
+    const ids = [...new Set(rows.map(x => x.lead_id))];
+    const born = new Map((await (await sb(`leads?select=id,created_at&id=in.(${ids.map(encodeURIComponent).join(",")})`,
+                                          { headers: { Prefer: "" } })).json())
+                           .map(l => [l.id, new Date(l.created_at).getTime() / 1000]));
     const now = Date.now() / 1000;
+    const late = rows.filter(x => x.event_name !== "Lead" && born.has(x.lead_id)
+                                  && new Date(x.event_time).getTime() / 1000 - born.get(x.lead_id) > LEAD_WINDOW);
+    if (late.length) { await mark(late.map(x => x.id), { error: "ლიდი 28 დღეზე ძველია" }); skipped += late.length; }
+    rows = rows.filter(x => !late.includes(x));
+
     const old = rows.filter(x => now - new Date(x.event_time).getTime() / 1000 > MAX_AGE);
     const fresh = rows.filter(x => !old.includes(x));
     if (old.length) { await mark(old.map(x => x.id), { error: "7 დღეზე ძველია" }); stale += old.length; }
@@ -87,7 +100,7 @@ exports.handler = async () => {
       }
     }
   }
-  const msg = `meta-crm-events: sent=${sent} failed=${failed} stale=${stale}`;
+  const msg = `meta-crm-events: sent=${sent} failed=${failed} stale=${stale} old_lead=${skipped}`;
   console.log(msg);
   return { statusCode: 200, body: msg };
 };
